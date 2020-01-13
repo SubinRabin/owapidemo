@@ -1,0 +1,298 @@
+@media (max-width: 6000px) and (min-width: 1200px){
+	#search_hotels_results_ahb{background-color:#e9ecf3;float: left;width: 100%;}
+	#search_hotels_results_ahb .adi-col-3edit{width: 23%;float: right;padding-right: 0px !important;padding-left: 15px;}
+	#search_hotels_results_ahb .adi-col-7edit{float: left !important;}
+	#search_hotels_results_ahb .search-result>.background-color-white{box-shadow: 0 10px 40px 0 rgba(62, 57, 107, .1), 0 2px 9px 0 rgba(62, 57, 107, .1);background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;}
+	#search_hotels_results_ahb .fixed-top-map{border: 1px solid #e8ebf3;border-radius: 3px;background: #fff;padding: 17px 10px 10px 10px;margin-bottom: 10px;}
+	.sortbar{}
+	#search_hotels_results_ahb .add_click_fu_martian_theme{background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;margin-bottom: 10px;padding: 10px;	}
+	#search_hotels_results_ahb .add_click_fu_martian_theme .hotel-search-input{margin-bottom: 0px;}
+	
+	#search_hotels_results_ahb .add_click_fu_martian_theme .hotel-search-input{}
+	#adivaha_api_hotels_box .tabpaneback{background: url(https://www.adivaha.com/demo/online-travel-theme/wp-content/themes/adivaha_main-avengers/images/banner1.jpg) center center;    height: 250px;    background-attachment: fixed;}
+	#adivaha_api_hotels_box .tabpaneback{position:relative;}
+
+	
+	#adivaha_api_hotels_box .tabpaneback:before {content: '';position: absolute;width: 100%;height: 100%;left: 0;right: 0;display: block;z-index: 0;top: 0;background: linear-gradient(-225deg, rgb(34, 51, 125) 5%, rgba(0, 0, 0, 0.8) 100%);}
+
+	
+	#adivaha_api_hotels_box .tabpaneback ul{z-index: 9;position: relative;top: 54px;}
+	
+	#adivaha_api_hotels_box .map_ioncs .label-onP{display: none;}
+	#adivaha_api_hotels_box .calendar_ioncs .label-onP{display: none;}
+	#adivaha_api_hotels_box .man_image_ioncs .label-onP{display: none;}
+	#adivaha_api_hotels_box .adiFullWp-14 .label-onP{display: none;}
+	
+	#adivaha_api_hotels_box .tabpaneback ul li input{height: 55px !important;box-shadow: 0 2px 6px 0 rgba(0,0,0,.15);}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-45{padding-right: 5px;width: 33.333%;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-45 input{border-radius: 5px 0px 0px 5px;background-position-y: 18px;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-21{padding-right: 5px;width: 33.333%;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-20{padding-right: 5px;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-14{float: left;width: 100%;margin-top: 20px;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-14 input{border-radius: 5px;width: 24%;margin: 0 auto;    display: flex;justify-content: center}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-20{width: 33.333%;}
+	#adivaha_api_hotels_box .tabpaneback ul .adiFullWp-20 input{border-radius: 0px 5px 5px 0px;}
+	#adivaha_api_hotels_box .calendar_ioncs input {background-position-y: 18px;}
+	#adivaha_api_hotels_box .man_image_ioncs input {background-position-y: 18px;}
+	
+	
+	#search_hotels_results_ahb .tabpanebackpadding{position: relative;top: -50px;}
+	
+	#search_hotels_results_ahb .theiaStickySidebar>form>.adi-full{background-color: #fff;padding: 10px;margin-bottom: 10px;border-radius: 3px;}
+	
+	#search_hotels_results_ahb .Filteryourtext{margin-bottom: 0px;}
+	#search_hotels_results_ahb .icons-search a{text-align: center;}
+	#search_hotels_results_ahb .icons-search a .fa{float: left;width: 100%;text-align: center;}
+	.hotel_information_newCode{display:none;}
+	.slider_part{display: block;}
+	.sidebar-wrapper_newCode{/*margin-top: 95px;*/    padding-top: 95px;}
+	.slides_BackGrund .active{border: 4px solid #186900;overflow: hidden;}
+	
+	#hotels_information_ahb{background-color:#e9ecf3;float: left;width: 100%;}
+	
+	#hotels_information_ahb .slider_part .bx-wrapper{    max-width: 100%;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eaeef9;
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);
+    float: left;
+    width: 100%;
+    padding: 10px;}
+	
+	#hotels_information_ahb .slider_part_title_site{      background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eaeef9;
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);
+    float: left;
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0px 15px 0px;}
+	
+	
+	
+	.Starcount .rating,
+	#hotels_information_ahb .slider_part .rating {
+    width: 61px;height: 11px;
+    display: inline-block;
+    background: url(https://www.adivaha.com/demo/online-travel-theme/wp-content/plugins/adivaha/apps/modules/adivaha-hotel-booking/images/star-rating.png) 0 0 no-repeat;
+    position: relative;
+    top: 0px;
+    margin-bottom: 0px;    left: 10px;
+}
+	.Starcount{    padding-right: 3%;
+    padding-top: 0px;}
+	.Starcount .rating-3,
+	#hotels_information_ahb .slider_part .rating-3 {background-position: -23px 0;}
+	.Starcount .rating-5,
+	#hotels_information_ahb .slider_part .rating-5{background-position:0 0}
+	.Starcount .rating-4,
+	#hotels_information_ahb .slider_part .rating-4{background-position:-13px 0}
+    .Starcount .rating-2,
+	#hotels_information_ahb .slider_part .rating-2{background-position:-35px 0}
+	.Starcount .rating-1,
+	#hotels_information_ahb .slider_part .rating-1{background-position:-47px 0}
+	.Starcount .rating-0,
+	#hotels_information_ahb .slider_part .rating-0{background-position:-60px 0}
+	#hotels_information_ahb .slider_part_title_site p{float: left;}
+	
+	.slider_part_title_site_left{float: left;width: 70%;}
+	.slider_part_title_site_right{float: right;width: 30%;position: relative;}
+	.slider_part_title_site_right .info_hotl_Pri{padding: 0px;margin-top: 21px;}
+	.slider_part_title_site_right .bookBtnl{float: right;width: 58%;padding: 13px;font-size: 19px;position: absolute;margin: 0px;right: 0px;top: 8px; border-radius:50px;}
+	
+	#hotels_information_ahb .slider_part .bx-wrapper .bx-controls-direction a{top: 80%;}
+	
+	#hotels_information_ahb .slider_part .bx-pager{margin-top: 10px;background-color: #fff;background-clip: border-box;
+    border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 6px;}
+	
+	
+	
+	
+	.room-details>p.padding-top-10.padding-bottom-10{background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 25px;margin-bottom: 10px;font-size: 14px;}
+	
+	.room-details .form-title{    font-size: 14px;
+    margin: 0px 0px 0px 0px;
+    overflow: hidden;
+    background-color: #ffffff;
+    background-clip: border-box;
+    border: 1px solid #eaeef9;
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);
+    float: left;
+    width: 100%;
+    padding: 10px;
+    line-height: 20px;
+    border-left: 1px solid #e8e8e8;}
+	
+	.room-details .step{font-size: 14px;margin: 0px 0px 10px 0px;overflow: hidden;background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 10px;    line-height: 20px;border-left: 1px solid #e8e8e8;}
+	.roomList_code{background-color: #fff;}
+	.result_info .adi-btn{text-align: center;}
+	.result_info{margin-bottom: 0px;}
+	
+	.sidebar-wrapper_newCode .book-modifie{position: relative;
+    background-color: #fff !important;
+    background-clip: border-box;
+    border: 1px solid #eaeef9;
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);
+    float: left;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 0px;
+	
+	}
+	.sidebar-wrapper_newCode .book-modifie .book-titel{color: #030303 !important;}
+	.sidebar-wrapper_newCode .book-modifie .book-paragraph{color: #030303 !important;}
+	.sidebar-wrapper_newCode .book-modifie:before{display: none;}
+	
+	
+	.sidebar-wrapper_newCode .hotel-inf-serbox{position: relative;background-color: #fff !important;background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 10px;margin-bottom: 10px;}
+	
+	.sidebar-wrapper_newCode .hotel-inf-serbox .thumbs-ioncs{margin-top: 0px;padding-left: 0px;}
+	.info_hotl_room_info .inf_room_typ{padding: 6px 25px 6px 20px;}
+	.descriptionLongOnshow{padding: 6px 0px 6px 24px !important;}
+	.sidebar-wrapper_newCode .info_hotl_PriSpn,
+	.sidebar-wrapper_newCode .info_hotl_Pri{padding: 6px 0px 6px 24px !important;}
+	.sidebar-wrapper_newCode .bookBtnl{margin: 0px;}
+	
+	
+	#hotels_booking_ahb{background-color:#e9ecf3;float: left;width: 100%;}
+	
+	#hotels_confirmation_ahb .descriptionWrapperpad> .adi-full.padding-bottom-10,
+	#hotels_booking_ahb .descriptionWrapperpad> .adi-full.padding-bottom-10{font-size: 14px;margin: 0px 0px 10px 0px;overflow: hidden;background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 10px;    line-height: 20px;border-left: 1px solid #e8e8e8;    border-bottom: 0px !important;}
+	
+	#hotels_confirmation_ahb .descriptionWrapperpad .cancellationPolicyDiv,
+	#hotels_booking_ahb .descriptionWrapperpad .cancellationPolicyDiv{font-size: 14px;margin: 0px 0px 10px 0px;overflow: hidden;background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);float: left;width: 100%;padding: 10px;    line-height: 20px;border-left: 1px solid #e8e8e8;    border-bottom: 0px !important;}
+	
+	#hotels_confirmation_ahb .descriptionWrapperpad .BackgroundColorde h3,
+	#hotels_booking_ahb .descriptionWrapperpad .BackgroundColorde h3{    background-color: transparent;
+    padding: 0px;}
+	
+	#hotels_booking_ahb .cardImagelogo img{float: left;clear: both;padding-top: 17px;}
+	
+	#hotels_booking_ahb #appliedCashback{margin: 0px 7px 0px 0px;}
+	
+	#hotels_confirmation_ahb .hotel-inf-serbox,
+	#hotels_booking_ahb .hotel-inf-serbox{background-color: #fff;background-clip: border-box;border: 1px solid #eaeef9;border-radius: 5px;overflow: hidden;    margin-top: 25px;}
+	
+	#hotels_confirmation_ahb{background-color:#e9ecf3;float: left;width: 100%;}
+#search_hotels_results_ahb .Selecttext{font-weight: 600;}
+.fixed-top-map p{font-size: 15px !important;}
+#search_hotels_results_ahb .show-map-7 h2 a{color: #000;white-space: nowrap;font-weight: 600;font-style: normal;}
+#search_hotels_results_ahb .show-map-3 .price-text{white-space: nowrap;font-weight: 600;font-style: normal;font-family: Lato,sans-serif;}
+
+
+#search_hotels_results_ahb .Milestext{width: 24%;float: left;font-size: 11px;font-weight: 600;}
+#search_hotels_results_ahb .Milestext .radio-labelP .adi-right{font-size: 11px;font-weight: 600;}
+#search_hotels_results_ahb .adi-col-3edit h5{font-size: 13px;font-weight: 600;    font-family: Lato,sans-serif;border-bottom: 1px dotted #eee;padding-bottom: 10px;}
+#search_hotels_results_ahb .radio-label{font-size: 13px;font-weight: 600;font-family: Lato,sans-serif;}
+
+
+
+.book-encourage-item-title{font-size: 16px;
+    margin: 0px 0px 10px 0px;
+    overflow: hidden;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eaeef9;
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0 rgba(234, 238, 249, .5);
+    float: left;
+    width: 100%;
+    padding: 10px;}
+
+
+.book-encourage-item-title .fa {
+	background-color: #186900;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    border-radius: 100%;
+    color: #fff;
+    padding: 11px 10px 10px 10px;
+    margin-right: 13px;
+}
+
+
+
+.hot_info_tripAdd{    padding-left: 25px;}
+.hot_info_tripAdd_img .padding-left-10{ padding: 0px;}
+.room-details .step{padding: 25px;}
+#hotels_confirmation_ahb .AssoonIs{font-size: 15px;padding-bottom: 0px;}
+#hotels_booking_ahb .AssoonIs{font-size: 15px;padding-bottom: 0px;}
+.AssoonIs{}
+#hotels_confirmation_ahb .payNowBtn .button_bookingsubmit	{    width: 100%;    padding: 18px 20px;}
+#hotels_confirmation_ahb .payNowBtn{    padding: 0px 0px 0px 0px !important;    }
+
+#roomsList .descriptionLongOnshow {
+    padding: 6px 0px 6px 0px !important;
+}
+	/*
+#hotels_booking_ahb .AssoonIs{font-size: 15px;padding-bottom: 0px;}
+#hotels_booking_ahb .adi-width-70{width: 100%;}
+#hotels_booking_ahb .adi-width-30{position: absolute !important;right: 0px;}
+#hotels_booking_ahb .adi-max-width{position: relative;}	
+
+
+
+#hotels_booking_ahb .adi-width-30 .adi-full.padding-20.border-top{display:none;}
+
+#hotels_booking_ahb .room-details>form>.adi-full{width: 50%;padding: 0px 5px 0px 0;position: relative;z-index: 9;
+    border-right: 1px solid #d6d6d6;
+}
+#hotels_booking_ahb .room-details>form>.adi-full:nth-child(2n-1) {width: 50%;padding: 0px 0px 0px 5px;float: right;    border-left: 1px solid #f9f9f9;}
+
+#hotels_booking_ahb .room-details .step .adi-col-4{width:100%;padding-right: 0px;padding-left: 0px;}
+
+
+#hotels_booking_ahb .room-details .ReviewnBookDiv,
+#hotels_booking_ahb .room-details .CheckInInstructionsDiv,
+#hotels_booking_ahb .room-details .SpecialCheckInDiv,
+#hotels_booking_ahb .room-details .txt_contact_newde{width: 100% !important;padding: 0px !important;}
+
+
+#hotels_booking_ahb .room-details .OnMobilePart{display:block;}
+
+#hotels_booking_ahb .room-details .ReviewnBookDiv{width: 100% !important;padding: 0px !important;}
+
+#hotels_booking_ahb .room-details .fadi-input{border-radius: 5px;height: 46px;}
+
+#hotels_booking_ahb .room-details .form-element,
+#hotels_booking_ahb .room-details .adi-input{border-radius: 5px;height: 46px;}
+
+#hotels_booking_ahb .room-details .step{    padding: 25px;}
+ */
+/*
+#hotels_booking_ahb .room-details>form>.adi-full:after {    padding: 7px 14px 7px 14px;    color: #fff;    right: -18px;
+    z-index: 99999;
+    border-radius: 100%;
+    text-align: center;
+	
+	    background: #186900;
+    content: "1";
+    display: block;
+    position: absolute;
+}
+
+#hotels_booking_ahb .room-details>form>.adi-full:nth-child(2n-1):after{display:none;}*/
+
+
+
+.sidebar-wrapper_newCode .bookBtnl{}
+#hotels_booking_ahb .room-image-on{display:none;}
+#hotels_booking_ahb .room-image-on-left7{display:block;float: left;width: 25%;overflow: hidden;height: 113px;}
+#hotels_booking_ahb .room-image-on-left7 img{width:100%;height: 113px;}
+
+#hotels_booking_ahb .room-image-on-left8{float: right; width: 75%;padding-left: 22px;}
+#hotels_booking_ahb .room-image-on-left8{}
+#hotels_booking_ahb .room-image-on-left8 .HotelTheTitel strong{float: left;width: 100%;margin-bottom: 10px;}
+
+
+
+
+}
+
+

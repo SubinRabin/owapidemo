@@ -1,0 +1,381 @@
+angular.module("AdivahaAHBHotelsInformation", ['elif', 'AdivahaAHBHotelsInformation.directives']);
+angular.module("AdivahaAHBHotelsInformation").filter('range', function() {
+    return function(input, total) {
+        total = parseInt(total);
+        for (var i = 0; i < total; i++) input.push(i);
+        return input;
+    };
+});
+angular.element(document).ready(function() {
+
+    var element = angular.element(document.querySelector('#hotels_information_ahb'));
+    var isInitialized = element.injector();
+    if (!isInitialized) {
+        angular.bootstrap(element, ['AdivahaAHBHotelsInformation']);
+    }
+    jQuery(".descriptionLongOnshow").hide();
+
+});
+'use strict';
+
+angular.module('AdivahaAHBHotelsInformation.directives', ['ngSanitize', 'ui.bootstrap']).directive('adivahaAhbHotelsInformation', function() {
+            return {
+                controller: function($scope, $http) {
+                    var prefix = jQuery('#prefix_adivaha_hotels').val();
+                    $scope.prefix = prefix;
+                    var xhr = null;
+					
+					$scope.property_type = document.getElementById(prefix + 'property_type').value;
+					$scope.ip_address = document.getElementById(prefix + 'ip_address').value;
+										
+                    $scope.pluginUrl = document.getElementById('adivaha_plugin_url').value;
+                    var actionUrl = $scope.pluginUrl + 'apps/modules/adivaha-hotel-booking/ean_update_rates.php';
+                    $scope.search_Session_Id = document.getElementById('search_Session_Id').value;
+                    $scope.hotelId = document.getElementById(prefix + 'hotelId').value;
+                    $scope.regionid = document.getElementById(prefix + 'regionid').value;
+                    $scope.regionname = document.getElementById(prefix + 'regionname').value;
+                    $scope.checkIn = document.getElementById(prefix + 'checkIn').value;
+                    $scope.checkOut = document.getElementById(prefix + 'checkOut').value;
+                    $scope.noofrooms = document.getElementById(prefix + 'rooms').value;
+                    $scope.adults = document.getElementById(prefix + 'adults').value;
+                    $scope.children = document.getElementById(prefix + 'children').value;
+                    $scope.language = document.getElementById('adh_language').value;
+                    $scope.currency = document.getElementById('adh_currency').value;
+                    $scope.currency_symbol = document.getElementById('adh_currency_symbol').value;
+
+                    var gallery = '';
+                    if ($scope.hotelId != '') {
+
+                        var param = 'action=Hotel_Description&hotelId=' + $scope.hotelId + '&regionid=' + $scope.regionid + '&checkIn=' + $scope.checkIn + '&checkOut=' + $scope.checkOut + '&rooms=' + $scope.noofrooms + '&adults=' + $scope.adults + '&children=' + $scope.children + '&language=' + $scope.language + '&currency=' + $scope.currency;
+                        var url = actionUrl + '?' + param;
+                        $http.get(url).success(function(response) {
+                            $scope.HotelSummary = response.responseData.HotelSummary;
+                            $scope.HotelDetails = response.responseData.HotelDetails;
+                            $scope.PropertyAmenities = response.responseData.PropertyAmenities;
+                            $scope.HotelImages = response.responseData.HotelImages.HotelImage;
+                            $scope.myInterval = 3000;
+                            $scope.slides = response.responseData.HotelImages.HotelImage;
+							//customer_analytics();
+                            RoomAvailability();
+                            getTripAdvisorReview();
+                            suggestedHotels();
+                            jQuery(".NewLoderON").hide();
+                        });
+                    }
+					
+					function customer_analytics(){
+						var param = 'action=customer_analytics&searched_destinations=' + $scope.regionname + '&property_type=' + $scope.property_type + '&customer_ip_address=' + $scope.ip_address + '&action_type=Hotels Information';
+						var url = actionUrl + '?' + param;
+						$http.get(url).success(function(response) {
+							response = response.trim();
+							if(response == '1'){
+								/* alert('Updated.'); */
+							}
+							else{
+								/* alert('Inserted.'); */
+							}
+						});					
+					}
+
+                    function RoomAvailability(param) {
+                        var param = 'action=RoomAvailability&hotelId=' + $scope.hotelId + '&regionid=' + $scope.regionid + '&checkIn=' + $scope.checkIn + '&checkOut=' + $scope.checkOut + '&rooms=' + $scope.noofrooms + '&adults=' + $scope.adults + '&children=' + $scope.children + '&language=' + $scope.language + '&currency=' + $scope.currency;
+
+                        var url = actionUrl + '?' + param;
+                        $http.get(url).success(function(response) {
+                            $scope.RoomTypes = response.responseData.RoomTypes;
+							$scope.RoomSize = response.responseData.size;
+                            jQuery(".wrapper-animated-loader").hide();
+
+                            jQuery(".descriptionLongOnshow").show();
+                            jQuery(".modifieSideanimated").hide();
+                            setTimeout(function() {
+                                showMoreInfo();
+                            }, 300);
+                        });
+                    };
+
+                    function showMoreInfo() {
+                        jQuery('.showMoreInfo').click(function() {
+                            jQuery('.shwo-hide-div').hide();
+                            var rel = jQuery(this).attr('rel');
+                            var relratecode = jQuery(this).attr('relratecode');
+                            if (rel == 0) {
+                                jQuery('#moreInfo_' + relratecode).show();
+                                jQuery(this).attr('rel', '1');
+                            } else {
+                                jQuery('#moreInfo_' + relratecode).hide();
+                                jQuery(this).attr('rel', '0');
+                            }
+                        })
+                    };
+
+                    function suggestedHotels() {
+                        var param = "action=Show_Hotel_Suggestions&hotelId=" + $scope.hotelId;
+                        var url = actionUrl + '?' + param;
+                        $http.get(url).success(function(response) {
+                            $scope.Hotel_Suggestions = response.result;
+                        });
+                    };
+
+                    function getTripAdvisorReview() {
+                        var param = "action=getTripAdvisorReview&hotelId=" + $scope.hotelId + "&language=" + $scope.language;
+                        var url = actionUrl + '?' + param;
+                        $http.get(url).success(function(response) {
+                            jQuery('#tripdiv').html(response);
+                        });
+                    }
+                    $scope.checkRoomAvailability = function() {
+                        jQuery('#roomsList').hide();
+                        jQuery('#roomsListLoader').show();
+                        $scope.checkIn = document.getElementById(prefix + "checkIn").value;
+                        $scope.checkOut = document.getElementById(prefix + "checkOut").value;
+                        $scope.noofrooms = document.getElementById(prefix + "rooms").value;
+                        var adtStr = '';
+                        var chdStr = '';
+                        for (var i = 0; i < $scope.noofrooms; i++) {
+                            adtStr += jQuery('#' + prefix + 'adults_' + i).val() + ',';
+                            chdStr += jQuery('#' + prefix + 'childs_' + i).val() + ',';
+                        }
+                        var adults = adtStr.slice(0, -1);
+                        var childs = chdStr.slice(0, -1);
+                        $scope.adults = adults;
+                        $scope.children = childs;
+                        setTimeout(function() {
+                            jQuery('#roomsListLoader').hide();
+                            jQuery('#roomsList').fadeIn();
+                        }, 2000);
+						var param = 'action=RoomAvailability&hotelId=' + $scope.hotelId + '&regionid=' + $scope.regionid + '&checkIn=' + $scope.checkIn + '&checkOut=' + $scope.checkOut + '&rooms=' + $scope.noofrooms + '&adults=' + $scope.adults + '&children=' + $scope.children + '&language=' + $scope.language + '&currency=' + $scope.currency;
+						RoomAvailability(param);
+                    };
+                    $scope.increasenoofrooms = function() {
+                        if ($scope.noofrooms < 7) {
+                            $scope.noofrooms++;
+                            document.getElementById(prefix + "rooms").value = $scope.noofrooms;
+                        }
+                    };
+                    $scope.decreasenoofrooms = function() {
+                        if ($scope.noofrooms > 1) {
+                            $scope.noofrooms--;
+                            document.getElementById(prefix + "rooms").value = $scope.noofrooms;
+                        }
+                    };
+
+                    function showGuestRoom() {
+                        var totalGuest = 0;
+                        for (var i = 0; i < $scope.noofrooms; i++) {
+                            var adt = jQuery('#' + prefix + 'adults_' + i).val();
+                            var chd = jQuery('#' + prefix + 'childs_' + i).val();
+                            totalGuest += parseInt(adt) + parseInt(chd);
+                        }
+                        $scope.totalGuest = totalGuest;
+                        $scope.filterswitcher = $scope.noofrooms + " Room(s) " + " " + $scope.totalGuest + " " + " Guest(s)";
+                    }
+                    $scope.showpopupfilters = false;
+                    $scope.filtersonoff = function(val) {
+                        $scope.showpopupfilters = true;
+                    };
+                    $scope.hideRoomGroup = function(val) {
+                        $scope.showpopupfilters = false;
+                        showGuestRoom();
+                    };
+                    var adultArr = $scope.adults.split(",");
+                    var childsArr = $scope.children.split(",");
+                    setTimeout(function() {
+                        selectAdtChd()
+                    }, 100);
+
+                    function selectAdtChd() {
+                        for (var s = 0; s < $scope.noofrooms; s++) {
+                            jQuery("#" + prefix + "adults_" + s + " option[value=" + adultArr[s] + "]").attr('selected', 'selected');
+                            if ($scope.children != '') {
+                                jQuery("#" + prefix + "childs_" + s + " option[value=" + childsArr[s] + "]").attr('selected', 'selected');
+                            }
+                        }
+                    }
+                    var totalGuest = 0;
+                    for (var i = 0; i < $scope.noofrooms; i++) {
+                        var adt = adultArr[i];
+                        var chd = childsArr[i];
+                        if (typeof chd == 'undefined' || chd == '') {
+                            chd = 0;
+                        }
+                        totalGuest += parseInt(adt) + parseInt(chd);
+                    }
+                    $scope.totalGuest = totalGuest;
+                    $scope.filterswitcher = $scope.noofrooms + " " + document.getElementById('txt_Rooms').value + " " + totalGuest + " " + document.getElementById('txt_guests').value;
+                    $scope.nextPageUrl = document.getElementById('adivaha_site_url').value + '/' + jQuery('#' + prefix + 'nextpage').val();
+                },
+
+template:'<div class="'+document.getElementById('adimaxwidth').value+'" id="hotels_information_ahbcss">'+'<div class="adi-full hotel_information_newCode">'+
+
+
+'<div class="hotel_information_slider" style="position: relative;">'+
+'<div class="bxslider" style="border: 0px;height: 480px;">'+
+
+	'<li ng-repeat="slides in slides" style="height: 100%;">'+
+		'<div style=" background-image: url(\'{{slides.url.replace(\'_b\',\'_z\')}}\');height: 100%;background-repeat: no-repeat;background-size: cover;background-position-y: center;"></div>'+
+
+	'</li>'+
+
+
+
+'</div>'+
+
+
+
+'<div class="positionSumImg"> '+
+'<h1 class="padding-bottom-5 padding-top-10">{{HotelSummary.Name}}</h1> '+'<p class="padding-bottom-5">{{HotelSummary.Address1}},{{HotelSummary.City}},{{HotelSummary.Country}}</p>'+'<div class="rating rating-{{HotelSummary.hotelRating | number:0}}"></div>'+'</div>'+'</div>'+
+
+
+'</div>'+
+
+'<div class="adi-full">'+
+
+
+'<div class="adi-width-70 adi-left padding-right-10 descriptionWrapper">'+
+
+'<!-- I this code -->'+
+  '<div class="slider_part" style="position: relative;">'+
+  
+  '<div class="slider_part_title_site"> '+
+  
+  '<div class="slider_part_title_site_left"> '+
+	'<h1 class="padding-bottom-5 padding-top-10">{{HotelSummary.Name}}</h1> '+
+	'<p class="padding-bottom-5">{{HotelSummary.Address1}},{{HotelSummary.City}},{{HotelSummary.Country}}</p>'+
+	'<div class="rating rating-{{HotelSummary.hotelRating | number:0}}"></div>'+
+	
+	 '</div>'+
+	 
+	 '<div class="slider_part_title_site_right"> '+
+	'<p class="info_hotl_Pri"><span ng-bind-html="currency_symbol" class="ng-binding"></span>{{RoomTypes[0].averageRate | number:2}}</p>'+
+	'<a href="{{nextPageUrl}}/?hotelid={{HotelSummary.hotelId}}&ratecode={{RoomTypes[0].rateCode}}&dest={{regionname}}&checkIn={{checkIn}}&checkOut={{checkOut}}&rooms={{noofrooms}}&adults={{adults}}&children={{children}}&language={{language}}&currency={{currency}}&cityId={{regionid}}&search_Session_Id={{search_Session_Id}}" class="bookBtnl">'+document.getElementById('txt_book_now').value+'</a>'+
+	
+	'</div>'+
+	
+	
+	
+	
+	
+ '</div>'+
+  
+  
+  
+  
+  
+    '<ul class="bxslider_thm">'+
+      '<li ng-repeat="slides in slides">'+
+		'<img src="{{slides.url.replace(\'_b\',\'_z\')}}" title="" />'+
+	  
+	  '</li>'+
+      
+    '</ul>'+
+    '<div class="bx-pager">'+
+		'<div ng-repeat="slides in slides track by $index" class="slides_BackGrund">'+
+'<a data-slide-index="{{$index}}" href="">'+
+			'<img src="{{slides.url.replace(\'_b\',\'_s\')}}" title="" />'+
+		  '</a>'+
+	   '</div>'+
+      
+   '</div>'+
+  '</div>'+
+
+'<!-- End I this code -->'+
+
+
+
+
+
+
+
+
+'<div class="adi-full padding-bottom-10 search-result"> <div class="room-details padding-top-10 "> <p class="padding-top-10 padding-bottom-10" style="font-size: 14px;">'+document.getElementById('txt_property_photos').value+'</p>'+'<div class="adi-full position-relative">'+'<div class="form-title"><h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_room_detail_description').value+'</h3></div><div class="step"> <p class="" ng-bind-html="HotelDetails.roomDetailDescription"></p>'+'<div class="animated-background facebook NewLoderON" style="height: 86px;overflow: hidden;">'+'<div class="adi-col-7 adi-left" style="width: 100%;">'+'<div class="adianimated_7" style="width: 100%;">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'</div>'+'</div>'+'</div>'+'</div></div>'+'<div class="room-details-information">'+'<ul class="adiFullp widthresponsive_no labelnono siteLen">'+'<li class="adiFullWp-10 position-relative map_ioncs">'+'<i class="fa fa-calendar" aria-hidden="true"></i>'+'</li>'+'<li class="adiFullWp-30 calendar_ioncs">'+'<input type="text" class="inputadiP daterangenebl daterange adip-border" name="daterange" id="{{prefix}}dateRange"" value="" readOnly="true">'+'</li>'+'<li class="adiFullWp-40 position-relative man_image_ioncs">'+'<input type="text" ng-model="filterswitcher" class="inputadiP adip-border ng-pristine ng-valid ng-not-empty ng-touched" ng-click="filtersonoff()" readonly="readonly" id="dropboxadi">'+'<div id="drope_box" class="background-color-white P-adi-box-shadow adiFullp padding-20 position-absolute drope_box-css showhidefilters{{showpopupfilters}}">'+'<div class="adiFullp margin-bottom-10">'+'<div class="P-adi-width-33">'+'<label class="label-onP">'+document.getElementById('txt_Room').value+'</label>'+'<div class="adiFullp" style="display: flex;"> <a href="" class="border-one" ng-click="decreasenoofrooms()">-</a> <a href="" class="border-two ng-binding">{{noofrooms}}</a> <a href="" class="border-three" ng-click="increasenoofrooms()">+</a>'+'</div>'+'</div>'+'<div id="packListdiv">'+'<div class="margintopFull" ng-repeat="n in [] | range: noofrooms"><div class="packadultscls new-div-add1 nomar"><label class="label-onP" ng-if="n<1">'+document.getElementById('txt_adults').value+'</label><select name="adults[]" id="{{prefix}}adults_{{n}}" class="form-control backImgUse"><option selected="selected" value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div> <div class="packchildsscls nomar"><label class="label-onP" ng-if="n<1">'+document.getElementById('txt_childs').value+'</label><select name="childs[]" id="{{prefix}}childs_{{n}}" class="form-control changeChildNo backImgUse" relroom="0"><option selected="selected" value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div style="clear:both;"></div><div id="childAgeID_0" class="packchildagecls age-childAge"></div></div><br>'+'</div><div style="clear:both;"></div>'+'</div>'+'<div class="adiFullp">'+'<div class="be-ddn-footer adiFullp" style="background-color:#000;"> <a href="javascript:void(0)" class="" ng-click="hideRoomGroup();">'+document.getElementById('txt_done').value+'</a>'+'</div>'+'</div>'+'</div>'+'</li>'+'<li class="adiFullWp-20">'+'<input class="inputadiP inputadiPColor" style="padding-left: 0px; background-color: #000; border-right: 0px; color: #fff; font-size: 17px;" type="button" value="'+document.getElementById('txt_search').value+'" ng-click="checkRoomAvailability()">'+'</li>'+'</ul>'+'</div>'+'<div class="adi-full padding-bottom-10 search-result result_info" id="roomsListLoader"> <p class="ng-binding">'+document.getElementById('txt_searching_for_availibility').value+'</p><span><img src="'+document.getElementById("adivaha_plugin_url").value+'/apps/modules/adivaha-hotel-booking/images/loading.gif"></span></div><div class="adi-full padding-bottom-10 search-result result_info" id="roomsList">'+'<!-- new lodaer code add mk -->'+'<div class="wrapper-animated-loader adi-full">'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'<div class="timeline-wrapper margin-top-10">'+' <div class="timeline-item">'+'<div class="animated-background facebook">'+'<div class="adi-col-3 adi-left">'+'<div class="list-image">'+'</div>'+' </div>'+'<div class="adi-col-7 adi-left">'+'<div class="adianimated_7">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+' <div class="adianimated_3">'+'<p class="priceanimated_1"></p>'+'<p class="priceanimated_2"></p>'+'<p class="priceanimated_3Btn"></p>'+'</div>'+'</div>'+'</div>'+' </div>'+'</div>'+'</div>'+
+
+'<!-- end new lodaer code add mk -->'+
+
+'<div class="no-room-container" ng-if="RoomSize<1">'+
+'<div class="no-records-found">'+
+'<div class="no-records-img">'+
+'<img alt="" ng-src="'+document.getElementById('adivaha_plugin_url').value+'/apps/modules/adivaha-hotel-booking/images/no-rooms.png"/>'+
+'</div>'+
+'<div class="no-records-msg">'+
+'<h4>' + document.getElementById('txt_no_room_found').value + '</h4>'+
+'<p>' + document.getElementById('txt_select_some_other_dates').value + '</p>'+
+'</div>'+
+'</div>'+
+'</div>'+
+
+'<div class="adi-full background-color-white margin-top-10 border-1pag roomList_code" ng-repeat="RoomTypes in RoomTypes"> '+'<div class="adi-col-3 adi-left" style="position: relative;"> '+'<div class="list-image" ng-if="!RoomTypes.RoomImages" style="position: relative;"> '+'<img src="'+document.getElementById("adivaha_plugin_url").value+'apps/modules/adivaha-hotel-booking/images/blank-room.jpg"> '+'<div class="list-text-style padding-bottom-5 nonRefundableImge" ng-if="RoomTypes.nonRefundable">'+document.getElementById('txt_non_refundable').value+'</div>'+'</div> '+'<div ng-if="RoomTypes.RoomImages" class="list-image" ng-if="RoomTypes.RoomImages">'+'<img src="{{RoomTypes.RoomImages}}">'+'<div class="list-text-style padding-bottom-5 nonRefundableImge" ng-if="RoomTypes.nonRefundable">'+document.getElementById('txt_non_refundable').value+'</div>'+'</div></div><div class="adi-col-7 adi-left"> <div class="adi-col-7 adi-left paddingClasd "> '+'<h2 class="padding-bottom-5">{{RoomTypes.description}}</h2>'+
+
+'<div class="list-text-style padding-bottom-5 roomAmenitiesiocns" style="float: left;padding-right: 10px;" ng-repeat="valueAdds in RoomTypes.valueAddIds"><span ng-if="valueAdds.description"><i class="fa fa-check padding-right-5" style="padding-right: 8px;"></i></span>{{valueAdds.description}}</div>'+
+
+'<p class="descriptionLongOnshow" style="float:left;width: 100%;" ng-bind-html="RoomTypes.descriptionLong"></p>'+
+
+'</div><div class="adi-col-3 adi-right "> <div class="price text-right paddingColo3"> '+'<!--<div class="padding-bottom-10 tooltip fade" data-title="Add to Favourites"> <i class="fa fa-heart fa-heart-ioncs"> </i></div>-->'+'<p class="padding-bottom-10 price-text_info"><span ng-bind-html="currency_symbol" class="ng-binding"></span>{{RoomTypes.averageRate | number:2}}</p><p class="padding-bottom-10 ppr">'+document.getElementById('txt_per_room_per_night').value+'</p><a href="{{nextPageUrl}}/?hotelid={{HotelSummary.hotelId}}&ratecode={{RoomTypes.rateCode}}&dest={{regionname}}&checkIn={{checkIn}}&checkOut={{checkOut}}&rooms={{noofrooms}}&adults={{adults}}&children={{children}}&language={{language}}&currency={{currency}}&cityId={{regionid}}&search_Session_Id={{search_Session_Id}}" class="adi-btn text-color-white margin-top-10" >'+document.getElementById('txt_book_now').value+'</a></div></div></div>'+
+
+'<a href="javascript:void(0);" class="more-information showMoreInfo" rel="0" relRateCode="{{RoomTypes.rateCode}}">'+document.getElementById('txt_more_information').value+'</a> '+'<div class="shwo-hide-div" id="moreInfo_{{RoomTypes.rateCode}}" style="display:none;"> <div class="adi-full am-amenities paddingleft-225">'+'<div class="adi-full"> <div class="form-title"> <p class="" ng-bind-html="RoomTypes.descriptionLong"></p></div></div><div class="adi-full "> <h5>'+document.getElementById('txt_cancellation_policy').value+'</h5> <div class="form-title"> <p class="" ng-bind-html="RoomTypes.cancellationPolicy"></p></div></div><div class="adi-full "> <div class="form-title"> <h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_amenities').value+'</h3></div><div class="step"> <div class="adi-full padding-bottom-10"> <ul> <li ng-repeat="roomAmenities in RoomTypes.roomAmenities" style="width:48%; float:left" class="width-33css">{{roomAmenities.amenity}}</li><div style="clear:both;"></div></ul> </div></div></div></div></div></div></div>'+'<div class="adi-full am-amenities"> '+'<div class="adi-full "> '+'<div class="form-title"> <h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_amenities').value+'</h3></div><div class="step"> <ul class="adi-full padding-bottom-10 propertyAmenityCls" ng-if="PropertyAmenities.size<=1"> <li class="adi-left">{{PropertyAmenities.amenity}}</li><div style="clear:both"></div></ul><ul class="adi-full padding-bottom-10 propertyAmenityCls" ng-if="PropertyAmenities.size>1"> <li class="adi-left" ng-repeat="PropertyAmenity in PropertyAmenities.PropertyAmenity">{{PropertyAmenity.amenity}}</li><div style="clear:both"></div></ul></div></div><div class="adi-full "> <div class="form-title"> <h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_checkInInstructions').value+'</h3></div><div class="step  propertyDescriptioncaas"> <p class="" ng-bind-html="HotelDetails.checkInInstructions"></p></div></div><div class="adi-full "> <div class="form-title"> <h3 class=""> <strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_property_description').value+'</h3></div><div class="step"> <p class="propertyDescriptioncaa" ng-bind-html="HotelDetails.propertyDescription"></p></div></div><div class="adi-full"> <div class="form-title"> <h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_Point_of_interest').value+'</h3></div><div class="step"> <p class="" ng-bind-html="HotelDetails.areaInformation"></p></div></div><div class="adi-full "> <div class="form-title"> <h3 class=""><strong><i class="fa fa-check" aria-hidden="true"></i></strong>'+document.getElementById('txt_tripadvisor_reviews').value+'</h3></div><div class="step"><div id="tripdiv" ></div></div></div></div></div></div></div>'+
+
+
+'<div class="adi-width-30 adi-right sidebar-wrapper off_mobile_part sidebar-wrapper_newCode">'+'<div class="hotelInfo-modifie theiaStickySidebar"> <div class="book-modifie padding-20"> <p class="book-titel">'+document.getElementById('txt_your_selected_room_rate').value+'</p><p class="book-paragraph ">'+document.getElementById('txt_lock_this_price_now').value+'</p></div><div class="hotel-inf-serbox background-color-white"> <div class="thumbs-ioncs padding-top-10"> <i class="fa fa-thumbs-o-up"></i>'+document.getElementById('txt_best_price_for_your_travel_dates').value+'</div>'+
+
+'<div class="info_hotl_room_info padding-top-10"> '+'<div class="animated-background facebook modifieSideanimated" style="height: 128px;overflow: hidden;">'+'<div class="adi-col-7 adi-left" style="width: 100%;">'+'<div class="adianimated_7" style="width: 100%;">'+'<div class="h2animated"></div>'+'<p class="ratingratingdanimated"></p>'+'<p class="markeranimated"></p>'+'<p class="tripAdvisorRatinganimated"></p>'+'<p class="ratanimatedp"></p>'+'</div>'+'</div>'+'</div>'+'<h3 class="inf_room_typ padding-top-10">{{RoomTypes[0].description}}</h3> '+'<div>'+'<p class="descriptionLongOnshow " style="padding-left: 15px;" ng-bind-html="RoomTypes[0].descriptionLong"></p>'+'</div>'+
+
+'<ul class="info_hotl_listing">'+'<li ng-repeat="valueAdds in RoomTypes[0].valueAddIds"><span ng-if="valueAdds.description"><i class="fa fa-check padding-right-5" style="padding-right: 8px;"></i></span>{{valueAdds.description}}</li>'+
+'</ul>'+
+
+'<p class="info_hotl_Pri" ng-if="RoomTypes[0].averageRate"><span ng-bind-html="currency_symbol" class="ng-binding"></span>{{RoomTypes[0].averageRate| number:2}}</p><p class="padding-bottom-10 info_hotl_PriSpn ppr padding-top-10" ng-if="RoomTypes[0].averageRate">'+document.getElementById('txt_per_room_per_night').value+'</p><a  ng-if="RoomTypes[0].averageRate" href="{{nextPageUrl}}/?hotelid={{HotelSummary.hotelId}}&ratecode={{RoomTypes[0].rateCode}}&dest={{regionname}}&checkIn={{checkIn}}&checkOut={{checkOut}}&rooms={{noofrooms}}&adults={{adults}}&children={{children}}&language={{language}}&currency={{currency}}&cityId={{regionid}}&search_Session_Id={{search_Session_Id}}" class="bookBtnl">'+document.getElementById('txt_book_now').value+'</a></div>'+'<div class="hot_info_tripAdd padding-top-10" ng-if="HotelSummary.tripAdvisorRating"> <p class="based-on padding-top-10">'+document.getElementById('txt_based_on_tripadvisor').value+'</p><p class="hot_info_tripAdd_img padding-top-10"><span class=" padding-left-10"><img alt="" src="//www.tripadvisor.com/img/cdsi/img2/ratings/traveler/{{HotelSummary.tripAdvisorRating | number:1}}-39958-4.png"></span></p><p class="padding-top-10">'+document.getElementById('txt_rating_from').value+' {{HotelSummary.tripAdvisorReviewCount}} '+document.getElementById('txt_reviews').value+' <a href="javascript:void(0)" style="color: #00B7FF;float: right;">'+document.getElementById('txt_read_all_reviews').value+' </a></p></div>'+'<div class="hot_info_tripAdd padding-top-10" ng-if="!HotelSummary.tripAdvisorRating"> <p class="based-on padding-top-10">'+document.getElementById('txt_based_on_tripadvisor').value+'</p><p class="hot_info_tripAdd_img padding-top-10"><span class=" padding-left-10"><img alt="" src="//www.tripadvisor.com/img/cdsi/img2/ratings/traveler/0.0-39958-4.png"></span></p></div>'+'</div></div></div>'+
+
+
+
+
+
+
+
+
+'</div>'+'<div class="hotels-you-might adi-full">'+'<div class="adi-full might_also">'+'<div class="adi-max-width">'+'<h2 class="suggested_hotel_title">'+document.getElementById('txt_hotels_you_might_also_like').value+'</h2>'+'<p>'+document.getElementById('txt_travellers_viewed').value+'</p>'+'</div>'+'</div>'+'<div class="adi-full boxsue">'+'<div class="adi-max-width">'+'<div class="adi-col-4 adi-left" ng-repeat="Hotel_Suggestions in Hotel_Suggestions">'+'<div class="sug_hotel_top">'+'<a href="'+document.getElementById('adivaha_site_url').value+'/hotel-information/?hotelid={{Hotel_Suggestions.EANHotelID}}&dest={{regionname}}&checkIn={{checkIn}}&checkOut={{checkOut}}&rooms={{noofrooms}}&adults={{adults}}&children={{children}}&language={{language}}&currency={{currency}}&cityId={{regionid}}&search_Session_Id={{search_Session_Id}}" class="ng-binding"><img src="{{ Hotel_Suggestions.thumbNailUrl }}"></a>'+'</div>'+'<div class="sug_hotel_bot">'+'<div class="sName">'+'<p class=" ico16 lh1-2">'+'<a href="'+document.getElementById('adivaha_site_url').value+'/hotel-information/?hotelid={{Hotel_Suggestions.EANHotelID}}&dest={{regionname}}&checkIn={{checkIn}}&checkOut={{checkOut}}&rooms={{noofrooms}}&adults={{adults}}&children={{children}}&language={{language}}&currency={{currency}}&cityId={{regionid}}&search_Session_Id={{search_Session_Id}}" class="ng-binding">{{ Hotel_Suggestions.name }}</a>'+'</p> <address class="ico13 "> </address>'+'<p class="rating rating-{{ Hotel_Suggestions.hotelRating | number:0 }}"></p>'+'<p class="h_name_or3 remomar">'+'<img ng-src="//www.tripadvisor.com/img/cdsi/img2/ratings/traveler/{{Hotel_Suggestions.tripAdvisorRating}}-39958-4.png" >'+'</p>'+'</div>'+'<div class="sugHotPrice ng-binding"><span ng-bind-html="currency_symbol" class="ng-binding"></span>{{ Hotel_Suggestions.lowRate | number:2 }}</div>'+'</div>'+'</div>'+'</div>'+'</div>'+'</div>'+'</div>'+'<style>.adi-right{float:right}.adi-width-30{width:30%}.padding-20{padding:20px}.form-title h3 strong{background-color:#186900;text-align:center;width:40px;height:40px;display:inline-block;-webkit-border-radius:50%;-moz-border-radius:50%;border-radius:50%;color:#fff;font-size:18px;line-height:40px;text-align:center;position:absolute;left:0;top:0}.form-title h3{padding:9px;font-size:20px;font-weight:500;position:relative;padding-left:55px;clear:both}.step{font-size:14px;line-height:20px;border-left:1px solid #e8e8e8;padding:10px 0 20px 31px;margin:0 0 0px 20px;overflow:hidden}.padding-bottom-10{padding-bottom:10px}.padding-top-10{padding-top:10px}.adi-width-70 {width: 70%;}.padding-right-10 {padding-right: 10px;}</style>'+'<style>.image-slider{height:500px;overflow:hidden;position:relative;float:left;width:100%}.positionSumImg{z-index:9;position:absolute;bottom:0px;padding:60px 20px 5px 20px;left:0px;right:0px;background:-webkit-linear-gradient(bottom,rgba(0,0,0,.85),rgba(0,0,0,0))}.positionSumImg h1{color:#fff}.positionSumImg p{color:#fff !important;}.image-slider img{width:100%;height:500px}.room-details{}.amenities-box{background-color:#f7f7f7;border-radius:5px;margin-bottom:25px;border:1px solid #ececec}.form-title{}.form-title h3{padding:9px;font-size:20px;font-weight:500;position:relative;padding-left:55px;clear:both}.form-title h3 strong{background-color:#186900;text-align:center;width:40px;height:40px;display:inline-block;-webkit-border-radius:50%;-moz-border-radius:50%;border-radius:50%;color:#fff;font-size:18px;line-height:40px;text-align:center;position:absolute;left:0;top:0}.room-details-information{background-color:#186900;float:left;width:100%;padding:20px}.room-details-information ul{float:left;width:100%}.room-details-information ul li{}.room-details-information ul .map_ioncs .fa{font-size:50px;color:#fff;margin-right:15px}.room-details-information ul li input{height:50px;border:0px;border-right:1px solid #ccc;padding:0px 8px 0px 34px}.step{font-size:14px;line-height:20px;border-left:1px solid #e8e8e8;padding:10px 0 20px 31px;margin:0 0 0px 20px;overflow:hidden}.am-amenities{}.am-amenities .step{}.am-amenities .step .fa{color:#186900}.thumbs-ioncs{color:#186900;font-size:13px;margin-top:25px;padding-left:15px}.thumbs-ioncs .fa{font-size:30px;margin-right:6px}.inf_room_typ{font-size:14px;padding:15px 0;font-weight:800;padding-left:15px}.info_hotl_Pri{margin-top:1em;font-size:24px;font-weight:800;padding-left:15px;clear:both}.info_hotl_PriSpn{font-size:12px;color:#a8a29f;display:block;text-align:left;padding-left:15px;clear:both}.bookBtnl{padding:20px;font-size:25px;float:left;width:95%;background-color:#000;text-align:center;color:#fff;margin-bottom:10px;margin:16px;clear:both}.bookBtnl:hover{color:#fff}.hot_info_tripAdd{float:left;width:100%;padding-left:15px}.book-modifie{background-color:#186900;position:relative}.book-modifie:before{content:\'\';position:absolute;bottom:-19px;top:inherit;font-size:50px;border-right:20px solid transparent;border-left:20px solid transparent;width:0;height:0;border-top:20px solid #186900}.info_hotl_listing{float:left;width:100%;margin-bottom:20px;padding-left:15px}.info_hotl_listing li{position:relative;width:100%;padding:4px 0px 0px 23px;font-size:13px}.info_hotl_listing li:before{font-family:FontAwesome;font-style:normal;font-weight:normal;text-decoration:inherit;color:#505050;font-size:12px;padding-right:0.5em;position:absolute;top:4px;left:3px}.book-titel{font-size:18px;color:#fff !important;}.book-paragraph{color:#fff !important;}.based-on{font-size:12px;color:#777}.hot_info_tripAdd{}.hot_info_tripAdd_img{color:#0263e2;font-weight:600;font-size:20px}.map-information{border:10px solid #fff;height:450px;overflow:hidden}.map-information img{height:450px;width:100%}.descriptionWrapper{}.result_info h2{text-align:left;font-size:17px;color:#333;font-weight:600;padding-top:0;position:relative;overflow:hidden;white-space:nowrap;max-width:100%;text-overflow:ellipsis}.price-text_info{font-size:30px;line-height:40px;font-weight:600;color:#000}.result_info .ppr{color:#777}.result_info .adi-btn{padding:10px 25px;display:inline-block;border-radius:3px;background-color:#000;color:#fff}.am-amenities .form-title p{margin-top:7px}.am-amenities .step p b{margin-bottom:7px;margin-top:7px;display:inline-block}.am-amenities h5{color:#333;padding:20px 0 11px;font-size:18px;line-height:28px;font-weight:600}.am-amenities .form-title h3{color: #484848;}.am-amenities .form-title h3 strong{}.result_info{margin-bottom:45px}.result_info .am-amenities h3{padding-left:0px}.result_info .am-amenities h3 strong{display:none}.result_info .am-amenities .step{border-left:0px solid #008a29;padding:0px 0px 0px 0px;margin:0px}.roomAmenitiesiocns{}.roomAmenitiesiocns .fa{}.am-amenities .step ul li{position:relative;padding:5px 0px 4px 20px;color:#4e4e4e}.am-amenities .step ul li:before{content:"f00c";font-family:FontAwesome;font-style:normal;font-weight:normal;text-decoration:inherit;color:#505050;font-size:12px;padding-right:0.5em;position:absolute;top:6px;left:0px}.sug_hotel_bot{width:100%;float:left;padding:15px;background-color:#f1f1f1;position:relative}.suggested_hotel_title{text-align:center;font-size:33px;font-weight:300}.might_also{padding:35px 20px 35px 20px}.might_also p{text-align:center}.sug_hotel_top{width:100%;float:left;height:230px;position:relative;overflow:hidden}.sug_hotel_top img{width:100%}.hotels-you-might{margin-bottom:50px}.boxsue .adi-col-4{padding-right:10px}.boxsue .lh1-2 a{color:#333;font-size:13px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.boxsue .sugHotPrice{}.reviewBoxRight .rating{background-image:none;top:0px;width:auto;height:auto}</style>'+'<style>.sidebar-wrapper{position:relative;top:-80px;z-index:9}#slides_control{position:relative}.carousel-control .icon-prev:before{font-size:100px}.carousel-control .icon-next:before{font-size:100px}.carousel-indicators{display:none}.propertyAmenityCls li{width:50%}.adiFullp{width:100%;float:left}.adiFullWp-45{width:45%;float:left}.adiFullWp-21{width:21%}.adiFullWp-20{width:20%}.adiFullWp-14{width:14%}.inputadiP{height:43px;width:100%;border:0px solid #ddd;padding-left:18px;color:#777}.adiFullWp-30{width:30%}.label-onP{margin-bottom:10px;display:inherit;float:left;width:100%;color:#777}.showhidepopuptrue{display:block}.P-adi-width-33{float:left;width:33.3333%}.border-one{border:1px solid #ddd;padding:0px 5px 0px 6px;display:inline-block;height:25px;width:22px;text-align:center;font-size:30px}.border-two{font-size:13px;height:25px;width:22px;text-align:center;border:1px solid #ddd;border-left:0px;border-right:0px;padding:2px 5px 0px 6px;display:inline-block}.border-three{border-left:0px;border:1px solid #ddd;padding:2px 5px 0px 5px;display:inline-block;font-size:17px;height:25px;width:22px;text-align:center}.be-ddn-footer a{display:inline-block;float:left;width:100%;text-align:center;padding:10px;background-color:#000;color:#fff;font-size:15px}.man_image_ioncs input{background-image:url("'+document.getElementById("adivaha_plugin_url").value+'apps/dashboard/UI/images/man_image.png");background-position-x:10px;background-repeat:no-repeat;padding-left:30px;background-position-y:15px}.adiFullWp-40{width:40%}.result_info h2{}.descriptionWrapper{border-right:1px solid #e8e8e8}.descriptionLongOnshow{height:103px;overflow:hidden;color: #484848;}.descriptionLongOnshow br:nth-child(3){display:none}.descriptionLongOnshow br{}.descriptionLongOnshow strong{float:left;width:100%}.paddingClasd{padding:5px 10px 10px 13px;}.paddingleft-225{border-left:206px solid #e8e8e8;padding-left:16px;padding-right:15px}.showhidefiltersfalse{display:none}.margintop{margin:3px}.packadultscls{width:50%;float:left}.packchildsscls{width:50%;float:right}.drope_box-css{top:55px !important;max-width:400px;width:310px !important;z-index:9;position:absolute;box-shadow:0px 3px 5px 0px rgba(0, 0, 0, 0.2);padding:20px;right:0px;border-top:0px solid #fff}.drope_box-css:before{border-bottom-color:#fff;bottom:100%;right:15%;border:solid transparent;content:" ";height:0;width:0;position:absolute;pointer-events:none;border-width:12px;border-bottom:12px solid #fff;top:-24px}.border-one,.border-two,.border-three{display:inline-block;text-align:center;height:27px;width:25px}.border-one{border:1px solid #ddd;padding:0px 5px 0px 6px;font-size:30px}.border-two{font-size:13px;border:1px solid #ddd;border-left:0px;border-right:0px;padding:2px 5px 0px 6px}.border-three{border-left:0px;border:1px solid #ddd;padding:2px 5px 0px 5px;font-size:20px}.backImgUse{background-image:url('+document.getElementById("adivaha_plugin_url").value+'images/select_dropdown.png);background-repeat:no-repeat;background-position:100% 100%;height:31px;padding:5px 8px;-webkit-appearance:none;width:95%;border:1px solid #ccc;border-radius:0px}.labelnoyes .drope_box-css{top:78px !important}#packListdiv{float:right;width:66.6666666%}#packListdiv .margintopFull{margin-bottom:10px;float:left;width:100%}#roomsListLoader{text-align:center;padding:52px;border:1px solid #ccc;margin-top:25px;display:none}.daterangenebl{display:block !important}.nonRefundableImge{font-size:10px;color:#fff;text-transform:uppercase;text-align:center;line-height:14px;transform:rotate(-52deg);-webkit-transform:rotate(-52deg);width:153px;display:block;box-shadow:0 3px 10px -5px rgba(0,0,0,1);position:absolute;top:24px;left:-45px;background:#186900;font-weight:bold;padding:6px}#slides_control{border:0px;height:480px}.carousel-inner{height:100%}.carousel-inner>.item{height:100%}.carousel{height:100%}.paddingColo3{}.animated-background .adi-col-3{float:left;width:25%;height:176px}.animated-background .h2animated{border:solid #fff;height:40px;border-width:24px 97px 0px 11px}.animated-background .ratingratingdanimated{border:solid #fff;height:28px;border-width:7px 207px 9px 11px}.animated-background .ratanimatedp{border:solid #fff;height:58px;border-width:2px 200px 39px 11px}.animated-background .tripAdvisorRatinganimated{border:solid #fff;height:29px;border-width:2px 165px 14px 11px}.animated-background .markeranimated{height:21px;border:solid #fff;border-width:3px 165px 7px 11px}.animated-background .priceanimated_1{border:solid #fff;height:63px;border-width:45px 14px 0px 25px}.animated-background .priceanimated_2{border:solid #fff;height:37px;border-width:14px 14px 11px 4px}.animated-background .priceanimated_3Btn{border:solid #fff;height:76px;border-width:32px 10px 11px 6px}.animated-background .adianimated_7{float:left;width:70%}.animated-background .adianimated_3{float:left;width:30%}.animated-background .list-image{}.animated-background .adi-col-7{float:left;width:75%;height:176px}@-webkit-keyframes placeHolderShimmer{0%{background-position:-468px 0}100%{background-position:468px 0}}@keyframes placeHolderShimmer{0%{background-position:-468px 0}100%{background-position:468px 0}}.timeline-wrapper{}.timeline-item{background:#fff;border:1px solid;border-color:#e5e6e9 #dfe0e4 #d0d1d5;height:177px}.animated-background{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-name:placeHolderShimmer;animation-name:placeHolderShimmer;-webkit-animation-timing-function:linear;animation-timing-function:linear;background:#f6f7f8;background:#eee;background:-webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(18%, #dddddd), color-stop(33%, #eeeeee));background:-webkit-linear-gradient(left, #eee 8%, #ddd 18%, #eee 33%);background:linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);-webkit-background-size:800px 104px;background-size:800px 104px;height:177px;position:relative}@media (max-width: 767px){.wrapper-animated-loader{}.wrapper-animated-loader .timeline-item{height:354px}.wrapper-animated-loader .animated-background{height:100%}.wrapper-animated-loader .adi-col-3{width:100% !important}.wrapper-animated-loader .adi-col-7{width:100% !important}}.bookBtnl:focus{color:#fff;outline:0px auto -webkit-focus-ring-color}.result_info .adi-btn:focus{color:#fff;outline:0px auto -webkit-focus-ring-color}.bookBtnl:hover, .result_info .adi-btn:hover{color:#fff}.bookBtnl{border-radius:3px}.descriptionWrapper{}.result_info h2{text-align:left;font-size:17px;color:#484848;font-weight:600;padding-top:0;position:relative;overflow:hidden;white-space:nowrap;max-width:100%;text-overflow:ellipsis;   }.price-text_info{font-size:30px;line-height:40px;font-weight:600;color:#000}.result_info .ppr{color:#777}.result_info .adi-btn{padding:10px 25px;display:inline-block;border-radius:3px;background-color:#000;color:#fff}.am-amenities .form-title p{margin-top:7px}.am-amenities .step p b{margin-bottom:7px;margin-top:7px;display:inline-block}.am-amenities h5{color:#333;padding:20px 0 11px;font-size:18px;line-height:28px;font-weight:600}.am-amenities .form-title h3{}.am-amenities .form-title h3 strong{}.result_info{margin-bottom:45px}.result_info .am-amenities h3{padding-left:0px}.result_info .am-amenities h3 strong{display:none}.result_info .am-amenities .step{border-left:0px solid #008a29;padding:0px 0px 0px 0px;margin:0px}.roomAmenitiesiocns{}.roomAmenitiesiocns .fa{}.am-amenities .step ul li{position:relative;padding:5px 0px 4px 20px;color:#4e4e4e}.am-amenities .step ul li:before{content:"f00c";font-family:FontAwesome;font-style:normal;font-weight:normal;text-decoration:inherit;color:#505050;font-size:12px;padding-right:0.5em;position:absolute;top:6px;left:0px}.sug_hotel_bot{width:100%;float:left;padding:20px;background-color:#f1f1f1;position:relative}.suggested_hotel_title{}.might_also{padding:35px 20px 35px 20px}.might_also p{text-align:center}.sug_hotel_top{width:100%;float:left;height:230px;position:relative;overflow:hidden}.sug_hotel_top img{width:100%}.hotels-you-might{margin-bottom:50px}.boxsue .adi-col-4{padding-right:10px}.boxsue .lh1-2 a{color:#333;font-size:13px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.boxsue .sugHotPrice{font-weight:700;font-size:21px;}.reviewBoxRight .rating{background-image:none;top:0px;width:auto;height:auto}.adi-width-1{width:1%}.adi-width-2{width:2%}.adi-width-3{width:3%}.adi-width-4{width:4%}.adi-width-5{width:5%}.adi-width-6{width:6%}.adi-width-7{width:7%}.adi-width-8{width:8%}.adi-width-9{width:9%}.adi-width-10{width:10%}.adi-width-11{width:11%}.adi-width-12{width:12%}.adi-width-13{width:13%}.adi-width-14{width:14%}.adi-width-15{width:15%}.adi-width-16{width:16%}.adi-width-17{width:17%}.adi-width-18{width:18%}.adi-width-19{width:19%}.adi-width-20{width:20%}.adi-width-21{width:21%}.adi-width-22{width:22%}.adi-width-23{width:23%}.adi-width-24{width:24%}.adi-width-25{width:25%}.adi-width-26{width:26%}.adi-width-27{width:27%}.adi-width-28{width:28%}.adi-width-29{width:29%}.adi-width-30{width:30%}.adi-width-31{width:31%}.adi-width-32{width:32%}.adi-width-33{width:33%}.adi-width-34{width:34%}.adi-width-35{width:35%}.adi-width-36{width:36%}.adi-width-37{width:37%}.adi-width-38{width:38%}.adi-width-39{width:39%}.adi-width-40{width:40%}.adi-width-41{width:41%}.adi-width-42{width:42%}.adi-width-43{width:43%}.adi-width-44{width:44%}.adi-width-45{width:45%}.adi-width-46{width:46%}.adi-width-47{width:47%}.adi-width-48{width:48%}.adi-width-49{width:49%}.adi-width-50{width:50%}.adi-width-60{width:60%}.adi-width-70{width:70%}.adi-col-3{width:25%}.adi-col-4{width:33.3333%}.adi-col-7{width:75%}.adi-col-6{width:66.55555%}.text-center{text-align:center}.text-right{text-align:right}.padding-70{padding:70px}.adi-full{width:100%;float:left}.margin-top-10 {margin-top: 10px;}.roomList_code{position: relative;overflow: hidden;}.roomList_code .list-image img{width:100%}.list-image{height: 158px;} .calendar_ioncs input{background-position-y: 14px;} #hotels_information_ahb p{color: #484848;}.rating{width:61px;height:11px;display:inline-block;background:url('+document.getElementById('adivaha_plugin_url').value+'apps/modules/adivaha-hotel-booking/images/star-rating.png) 0 0 no-repeat;position:relative;top:-7px;margin-bottom: 0px;}.rating-5{background-position:0 0}.rating-4{background-position:-13px 0}.rating-3{background-position:-23px 0}.rating-2{background-position:-35px 0}.rating-1{background-position:-47px 0}.rating-0{background-position:-60px 0}</style>'+
+
+'<style>@media (max-width: 767px){.adi-col-3 {width: 100%;} .adi-col-7 {width: 100%;}.adi-col-4 {width: 100%;}.adi-width-70 {width: 100%;}.descriptionWrapper {border-right: 0px solid #e8e8e8 !important;}} .bx-pager{float: left;width: 100%;}.slides_BackGrund{width: 16.666666666%;height: 100px;overflow: hidden;float: left;} .slides_BackGrund a img{width: 100%;height: 100px;}.slides_BackGrund a{float: left;width: 100%;background-color: #ddd;border: 4px solid #fff;display: inline-block;    height: 100px;}.slider_part{height: 400px;}.slider_part .bxslider_thm{height: 400px;overflow: hidden;} .slider_part .bx-viewport{height: 400px !important;} .slider_part{display: none;}</style>'};});
+
+	jQuery(document).ready(function(){
+	jQuery(".bookBtnl").click(function(){
+	jQuery(".bookBtnl").addClass("clicked_btnloader");
+	
+	});
+
+setTimeout(function(){
+	jQuery('.bxslider_thm').bxSlider({ pagerCustom: '.bx-pager', auto:true });
+	
+	
+	
+jQuery('.bxslider').bxSlider({
+	auto: true,
+	autoControls: true,
+	stopAutoOnClick: true,
+	autoControls: false,
+	infiniteLoop: false,
+	pager: false
+	/*pager: true
+	pagerCustom: '#bx-pager'*/
+});
+}, 8000);
+});
+jQuery(function() {
+            var prefix = jQuery('#prefix_adivaha_hotels').val();
+            if (document.getElementById(prefix + "checkIn") != null) {
+                var today_Date = new Date(document.getElementById(prefix + "checkIn").value);
+                var nextDayDate = new Date(document.getElementById(prefix + "checkOut").value);
+                jQuery("#" + prefix + "dateRange").daterangepicker({
+                            startDate: today_Date,
+                            endDate: nextDayDate,
+                            opens: 'right',
+                            autoApply: true,
+                            autoclose: true,
+                            locale: {
+                                format: 'DD-MMM-YYYY'
+                            }
+                        }, function(start, end, label) {
+                            jQuery("#" + prefix + "checkIn").val(start.format('YYYY-MM-DD'));
+                            jQuery("#" + prefix + "checkOut").val(end.format('YYYY-MM-DD'))
+		
+	});
+	
+	}});

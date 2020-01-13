@@ -1,0 +1,19 @@
+jQuery(document).ready(function(){
+
+var randomNumber = Math.floor(Math.random() * 6)+1;
+
+  jQuery(".list-click").click(function(){
+	jQuery(".search-result").removeClass( "search-result-grid" );
+  });
+  
+  jQuery("#hotels_booking_ahb .descriptionWrapperpad").prepend('<div class="book-encourage-item book-encourage-item-courage"><span class="book-encourage-item-title"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>Booking takes just '+randomNumber+' minutes!</span></div><div class="book-encourage-item book-encourage-item-courage"><span class="book-encourage-item-title"><i class="fa fa fa-user" aria-hidden="true"></i><span><a class="c-login-anchor"href="' + document.getElementById('adivaha_site_url').value + '/register/" style="color: #022ae8;">Register</a> as a ' + document.getElementById('adivaha_site_url').value + ' member to manage your bookings with ease</span></span></div>');
+
+	
+
+});
+
+
+
+
+
+
