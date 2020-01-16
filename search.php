@@ -753,7 +753,6 @@ function searchMethod($token) {
       </div>
       <div class="adi-col-7 adi-left">
          <div class="adi-col-6 adi-left padding-addbox border-right-dotted show-map-7">
-            
             <h2 class="padding-bottom-10" style=""> <a id="image_target_description" href="#" target="_blank" class="ng-binding"><?php echo $value->HotelName ?> </a></h2>
             <p class="rating rating-<?php echo $value->Rating ?>"></p>
             <div class="list-text-style ng-binding"><i class="fa fa-map-marker padding-right-5" style="font-size:17px;"></i><?php echo $value->HotelAddress ?></div>
@@ -771,7 +770,7 @@ function searchMethod($token) {
                </div>
                <p class="padding-bottom-10 price-text Grid-hide ng-binding"><span ng-bind-html="currency_symbol" class="ng-binding">AED</span> <?php echo $value->TotalPrice ?></p>
                <p class="padding-bottom-10 ppr Grid-hide"><?php echo count($_REQUEST['adults']) ?> room/<?php echo $tot_days ?> night</p>
-               <a target="_blank" id="image_target_description" href="./availableRooms.php" class="adi-btn adi-btnrund text-color-white margin-top-10">Select Room </a>
+               <a target="_blank" id="image_target_description" href="./availableRooms.php?hotelCode=<?php echo $value->HotelCode ?>&token=<?php echo $value->token ?>" class="adi-btn adi-btnrund text-color-white margin-top-10">Select Room </a>
             </div>
          </div>
       </div>
