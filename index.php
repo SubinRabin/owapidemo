@@ -1047,21 +1047,7 @@ jQuery(document).ready(function(){
     jQuery(".site-explain-box").hide();
   });
 });
-/*
 
-jQuery(document).ready(function(){
-	var exp_site_link = "mkdkfmdkfkm";
-	if(exp_site_link==sightseeing){
-		jQuery("#tab-block .tab-mnu>li").removeClass("active");
-		jQuery("#tabId_adivaha_ADH_Viator_Sightseeing_SearchBox").addClass("");
-	  
-	}
-	
-else{
-	
-}
-	
-	});*/
 </script>
 
 
@@ -1130,90 +1116,6 @@ jQuery(document).ready(function(){
 	
 	});
 
-/*
-function ResetRel(oBj){
-	jQuery('.hover-sub-menu li .sub-menu').each(function() {
-			var attrThis = 0;
-			jQuery(this).parent().attr('rel', attrThis );
-			jQuery(".sub-menu").removeClass("hover_sub_menu_click");
-			jQuery(".header-on-off").removeClass("hover_sub_men_overlay");
-			jQuery(".header-on-off").fadeOut();
-			jQuery(".hover-sub-menu").css({"z-index": "0", "position": "inherit"});
-	});
-}
-ResetRel();
-
-jQuery(".hover-sub-menu li").click(function(){
-	 ResetRel();
-	 
-	 var rel = jQuery(this).attr('rel');
-	 if(rel == 0 ){
-		jQuery(this).attr('rel', "1" );
-		jQuery(this).addClass("hover_sub_menu_click");
-		
-		 
-	 }else if(rel == 1 ){
-		 jQuery(this).attr('rel', "0" );
-		 jQuery(this).removeClass("hover_sub_menu_click");
-		 
-		 alert("mk1");
-	 }
-	
-});*/
-
-
-
-
-/*
-$('.changevid').click(function(e){
-e.preventDefault();
-$(this).parent().parent().addClass('active');
-return false;
-  });*/
-
-  
-  
-  
-  
-  
-  /*
-  
-
-var MenuClick_f = 0;
-
-jQuery(".hover-sub-menu li").click(function(){
-	if(MenuClick_f == 0) {
-		jQuery(this).addClass("hover_sub_menu_click");
-		jQuery(".header-on-off").addClass("hover_sub_men_overlay");
-		jQuery(".header-on-off").fadeIn();
-		jQuery(".hover-sub-menu").css({"z-index": "16", "position": "relative"});
-		MenuClick_f = 1;
-		
-	}else if( MenuClick_f == 1){
-		
-		jQuery(this).removeClass("hover_sub_menu_click");
-		jQuery(".header-on-off").removeClass("hover_sub_men_overlay");
-		jQuery(".header-on-off").fadeOut();
-		jQuery(".hover-sub-menu").css({"z-index": "0", "position": "inherit"});
-		MenuClick_f = 0;
-	}
-
-});
-
-jQuery(".adi-overlay").click(function(){
-	   jQuery(".hover-sub-menu li").removeClass("hover_sub_menu_click");
-	   jQuery(".header-on-off").fadeOut();
-	  jQuery(".hover-sub-menu").css({"z-index": "0", "position": "inherit"});
-});
-
-*/
-
-
-
-
-
-
-
 });
 
 if (jQuery(window).width() < 1024){
@@ -1239,27 +1141,6 @@ if (jQuery(window).width() < 1024){
   });
 })();
 
-
-/*
-
-jQuery(document).ready(function() {
-	if (jQuery(window).width() > 1200){
-		   	var stickyNavTop = jQuery('.tab-mnu').offset().top;
-		   	var stickyNav = function(){
-			    var scrollTop = jQuery(window).scrollTop(); 
-			    if (scrollTop > stickyNavTop) { 
-			        jQuery('.tab-cont').addClass('tab_cont_sticky');
-			    } else {
-			        jQuery('.tab-cont').removeClass('tab_cont_sticky'); 
-			    }
-			};
-			stickyNav();
-			jQuery(window).scroll(function() {
-				stickyNav();
-			});
-		}
-});
-*/
 
 jQuery(document).ready(function(){
  jQuery('.switcher>.option').addClass('sub-menu');

@@ -447,17 +447,7 @@ function availablehotelroomsmethod($token) {
   
   
   <adivaha-ahb-hotels-information style="transform: none;">
-    <div class="adi-max-width" id="hotels_information_ahbcss" style="transform: none;">
-        <div class="adi-full hotel_information_newCode">
-            <div class="hotel_information_slider" style="position: relative;">
-                
-            <div class="positionSumImg"> 
-                <h1 class="padding-bottom-5 padding-top-10 ng-binding">Hotel Bright</h1> 
-                <p class="padding-bottom-5 ng-binding">M - 85, (outer circle) Connaught Place,New Delhi,IN</p><div class="rating rating-3">
-                </div>
-            </div>
-        </div>
-    </div>
+   
     <div class="adi-full" style="transform: none;">
         <div class="adi-width-100 adi-left padding-right-10 descriptionWrapper">
             <!-- I this code -->
@@ -478,7 +468,7 @@ function availablehotelroomsmethod($token) {
                     <?php if (isset($res->status) && $res->status==true && isset($res->AvailableHotelRooms)) {
                         $i=1;
                         foreach ($res->AvailableHotelRooms as $key => $value) { ?>
-                            <div class="adi-col-3 adi-left r-type--room ">
+                            <div class="col-md-2 adi-left r-type--room ">
                                 <h5 class="room"> Room <?php echo $i ?></h5>
                                 <ul class="list-unstyled r-type--list margin-top-10 padding-left-10">
                                     <?php foreach($value as $k => $value1) { 
@@ -586,47 +576,46 @@ Sign up and we'll send the best deals to you
 
 </div>
 <footer class="adi-full displaynonefooter">
-		      <div class="adi-footer-top padding-70">
+              <div class="adi-footer-top padding-70">
             <div class="adi-max-width">
                 <div class="containerfooter"> </div>
                 <div class="adi-left adi-col-3">
-				<a href="https://www.adivaha.com/demo/online-travel-theme">API Demo </a>
-				<a href="https://www.adivaha.com/demo/online-travel-theme"> <img class="hidelogoss" src="./Online Travel Theme – Adivaha Hotel Description_files/logo.png" data-src="https://www.adivaha.com/demo/online-travel-theme/wp-content/uploads/2018/11/logo.png" alt="logo"> </a>
-				
-				<section id="media_image-14" class="widget widget_media_image"><a href="https://play.google.com/store/apps/details?id=com.TADVH.ean"><img width="170" height="50" src="./Online Travel Theme – Adivaha Hotel Description_files/goappleStor-e1542882253857.png" class="image wp-image-6232  attachment-full size-full" alt="" style="max-width: 100%; height: auto;"></a></section><section id="media_image-15" class="widget widget_media_image"><a href="https://play.google.com/store/apps/details?id=com.TADVH.ean"><img width="170" height="50" src="./Online Travel Theme – Adivaha Hotel Description_files/goplyaStor.png" class="image wp-image-8076  attachment-full size-full" alt="" style="max-width: 100%; height: auto;"></a></section>				
-				
-				</div>
-
+                <a href="https://www.adivaha.com/demo/online-travel-theme">API Demo </a>
+               
                 
-			 <div class="adi-left adi-col-3"><section id="custom_html-2" class="widget_text widget widget_custom_html"><div class="widgettitle">STAY CONNECTED</div><div class="textwidget custom-html-widget"><!--<div class="adi-full sendbtn-news">
-		<input type="text" class="adi-input" name="adi-input" id="" placeholder="Enter Email">
-		<a href="#" class="">send</a>
-	</div>-->
-	<ul class="adi-full social-links">
-		<li><a href="https://www.adivaha.com/demo/online-travel-theme/adivaha-hotel-description/?hotelid=374849&amp;dest=Delhi%20City,%20India&amp;checkIn=2020-01-12&amp;checkOut=2020-01-13&amp;rooms=1&amp;adults=2&amp;children=0&amp;language=en&amp;currency=USD&amp;cityId=28.632558|77.220036&amp;search_Session_Id=5e182819d54a0#" class="text-color-white"><i class="fa fa-facebook border-radius"></i> </a></li>
-		<li><a href="https://www.adivaha.com/demo/online-travel-theme/adivaha-hotel-description/?hotelid=374849&amp;dest=Delhi%20City,%20India&amp;checkIn=2020-01-12&amp;checkOut=2020-01-13&amp;rooms=1&amp;adults=2&amp;children=0&amp;language=en&amp;currency=USD&amp;cityId=28.632558|77.220036&amp;search_Session_Id=5e182819d54a0#" class="text-color-white"><i class="fa fa fa-google-plus border-radius"></i> </a></li>
-		<li><a href="https://www.adivaha.com/demo/online-travel-theme/adivaha-hotel-description/?hotelid=374849&amp;dest=Delhi%20City,%20India&amp;checkIn=2020-01-12&amp;checkOut=2020-01-13&amp;rooms=1&amp;adults=2&amp;children=0&amp;language=en&amp;currency=USD&amp;cityId=28.632558|77.220036&amp;search_Session_Id=5e182819d54a0#" class="text-color-white"><i class="fa fa fa-linkedin border-radius"></i> </a></li>
-		<li><a href="https://www.adivaha.com/demo/online-travel-theme/adivaha-hotel-description/?hotelid=374849&amp;dest=Delhi%20City,%20India&amp;checkIn=2020-01-12&amp;checkOut=2020-01-13&amp;rooms=1&amp;adults=2&amp;children=0&amp;language=en&amp;currency=USD&amp;cityId=28.632558|77.220036&amp;search_Session_Id=5e182819d54a0#" class="text-color-white"><i class="fa fa fa-twitter border-radius"></i> </a></li>
-	</ul></div></section></div>
-				 
-				 
-				 
+                <section id="media_image-14" class="widget widget_media_image"><a href="#"><img width="170" height="50" src="https://www.adivaha.com/demo/online-travel-theme/wp-content/uploads/2018/11/goappleStor-e1542882253857.png" class="image wp-image-6232  attachment-full size-full" alt="" style="max-width: 100%; height: auto;"></a></section><section id="media_image-15" class="widget widget_media_image"><a href="#"><img width="170" height="50" src="https://www.adivaha.com/demo/online-travel-theme/wp-content/uploads/2018/12/goplyaStor.png" class="image wp-image-8076  attachment-full size-full" alt="" style="max-width: 100%; height: auto;"></a></section>                
+                
+                </div>
+                <div class="adi-left adi-col-3 ioncsuse"></div>
+             <div class="adi-left adi-col-3"><section id="custom_html-2" class="widget_text widget widget_custom_html"><div class="widgettitle">STAY CONNECTED</div><div class="textwidget custom-html-widget"><!--<div class="adi-full sendbtn-news">
+        <input type="text" class="adi-input" name="adi-input" id="" placeholder="Enter Email">
+        <a href="#" class="">send</a>
+    </div>-->
+    <ul class="adi-full social-links">
+        <li><a href="#" class="text-color-white"><i class="fa fa-facebook border-radius"></i> </a></li>
+        <li><a href="#" class="text-color-white"><i class="fa fa fa-google-plus border-radius"></i> </a></li>
+        <li><a href="#" class="text-color-white"><i class="fa fa fa-linkedin border-radius"></i> </a></li>
+        <li><a href="#" class="text-color-white"><i class="fa fa fa-twitter border-radius"></i> </a></li>
+    </ul></div></section></div>
+                 
+                 
+                 
                 
             </div>
         </div>
-				
-		        <div class="adi-footer-bottom adi-full padding-20">
+                
+                <div class="adi-footer-bottom adi-full padding-20">
             <div class="adi-max-width">
                 <div class="adi-full text-center">
                     <!--<p class="copyright1"> Copyright All Rights Reserved © 2019</p>-->
-					<p class="copyright1"> Copyright All Rights Reserved © 2019</p>
+                    <p class="copyright1"> Copyright All Rights Reserved © 2019</p>
                 </div>
 
 
             </div>
         </div>
-		
-		    </footer>
+        
+            </footer>
 <a id="back2Top" title="Back to top" href="https://www.adivaha.com/demo/online-travel-theme/adivaha-hotel-description/?hotelid=374849&amp;dest=Delhi%20City,%20India&amp;checkIn=2020-01-12&amp;checkOut=2020-01-13&amp;rooms=1&amp;adults=2&amp;children=0&amp;language=en&amp;currency=USD&amp;cityId=28.632558|77.220036&amp;search_Session_Id=5e182819d54a0#">➤</a>
 <!-- Latest compiled JavaScript -->
 
@@ -688,34 +677,10 @@ footer{background-color: #186900!important;}
   <div style="display:none">
     <input type="text" id="myfavourite_active" value="Yes">
   </div>
-  <adivaha-adh-my-favourite></adivaha-adh-my-favourite>
 </div>
-<script>
-setTimeout(function(){ loginLogout();}, 2000);
-//loginLogout();
-function loginLogout(){
-var current_user =jQuery('#current_user').val();
-if(current_user>0){ 
-jQuery('.loginuserbox').removeClass('fa-sign-in');	
-jQuery('.loginuserbox').addClass('fa-user');	
-jQuery('.loginuserbox').html('<a href="javascript:void(0)"></a>');	
-}
-}
-</script>
-<link rel="stylesheet" id="bootstrap-min-file-css" href="./Online Travel Theme – Adivaha Hotel Description_files/bootstrap.min.css" type="text/css" media="all">
-<link rel="stylesheet" id="bxslider-style-file-css" href="./Online Travel Theme – Adivaha Hotel Description_files/jquery.bxslider.css" type="text/css" media="all">
-<link rel="stylesheet" id="daterangepicker-css" href="./Online Travel Theme – Adivaha Hotel Description_files/daterangepicker.css" type="text/css" media="all">
-<link rel="stylesheet" id="child-style11-css" href="./Online Travel Theme – Adivaha Hotel Description_files/style1.css" type="text/css" media="all">
-<link rel="stylesheet" id="custom-script1-css" href="./Online Travel Theme – Adivaha Hotel Description_files/child_js1.js.download" type="text/css" media="all">
-<link rel="stylesheet" id="child-style-color-file-css" href="./Online Travel Theme – Adivaha Hotel Description_files/style-color-inner.php" type="text/css" media="all">
-<script type="text/javascript" src="./Online Travel Theme – Adivaha Hotel Description_files/jquery.blockUI.min.js.download"></script>
-<script type="text/javascript">
-/* <![CDATA[ */
-var wc_add_to_cart_params = {"ajax_url":"\/demo\/online-travel-theme\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/demo\/online-travel-theme\/?wc-ajax=%%endpoint%%","i18n_view_cart":"View cart","cart_url":"https:\/\/www.adivaha.com\/demo\/online-travel-theme\/checkout\/?currency=USD","is_cart":"","cart_redirect_after_add":"no"};
-/* ]]> */
-</script>
-<script type="text/javascript" src="./Online Travel Theme – Adivaha Hotel Description_files/add-to-cart.min.js.download"></script>
-<script type="text/javascript" src="./Online Travel Theme – Adivaha Hotel Description_files/js.cookie.min.js.download"></script>
+<link rel='stylesheet' id='gtranslate-style-css'  href='./assets/css/style1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='UI-CSS-File-css'  href='./assets/css/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='woocommerce-css'  href='./assets/css/woocommerce.css' type='text/css' media='all' />
 <script type="text/javascript">
 /* <![CDATA[ */
 var woocommerce_params = {"ajax_url":"\/demo\/online-travel-theme\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/demo\/online-travel-theme\/?wc-ajax=%%endpoint%%"};
