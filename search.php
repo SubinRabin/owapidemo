@@ -348,7 +348,41 @@ $checkin_date=date_create($Checkin);
 $checkout_date=date_create($Checkout);
 $no_of_days=date_diff($checkin_date,$checkout_date);
 $tot_days = $no_of_days->format("%a");
+$cityandcountry = explode(",", $_REQUEST['destination']);
+if ($cityandcountry[0]=='Dubai City') {
+    $cityandcountry[0] = 'Dubai';
+}
+$rooms = array();
+foreach ($_REQUEST['adults'] as $key => $value) {
+   if ($_REQUEST['childs'][$key]!=0) {
+       for ($i=0; $i < $_REQUEST['childs'][$key]; $i++) { 
+        if (isset($_REQUEST['childAge'][$key][$i])) {
+            $rooms['Room'.($key+1).'ChildAge'][$i] = $_REQUEST['childAge'][$key][$i]; 
+        }
+       }
+   }
+}   
 
+$imploderequestChildAge = array();
+foreach ($_REQUEST['childs'] as $reqCkey => $reqCvalue) {
+  for ($i=1; $i <= $reqCvalue ; $i++) { 
+    foreach ($rooms['Room'.($reqCkey+1).'ChildAge'] as $reCAkey => $reCAvalue) {
+      $requestChildAge[$reqCkey][$reCAkey] = 'Room'.($reqCkey+1).'ChildAge[]='.$reCAvalue;
+    }
+    $imploderequestChildAge[$reqCkey] = implode("&", $requestChildAge[$reqCkey]);
+  }
+}
+
+$imploderequestChildAge1 = implode("&", $imploderequestChildAge);
+if ($imploderequestChildAge1!='') {
+  $imploderequestChildAge1 = '&'.$imploderequestChildAge1;
+} 
+
+$requestAdults = "adults[]=".implode("&adults[]=", $_REQUEST['adults']);
+
+$requestChild = "child[]=".implode("&child[]=", $_REQUEST['childs']);
+
+$request = "cityname=".trim($cityandcountry[0]," ")."&countryname=".trim($cityandcountry[1]," ")."&nationality=India&check_in=".$Checkin.".&check_out=".$Checkout."&noRooms=".count($_REQUEST['adults'])."&".$requestAdults."&".$requestChild.$imploderequestChildAge1;
 if (isset($_REQUEST['destination'])) {
    $dd=  authMethod();
    $dd = json_decode($dd);
@@ -741,7 +775,7 @@ function searchMethod($token) {
    <div class="adi-full ng-scope" ng-if="hotelList.LowRate>0">
       <div class="adi-col-3 adi-left">
          <div class="list-image">
-            <a class="adi-imgbtn" id="image_target_description" href="./availableRooms.php" target="_blank"><img src="<?php echo $value->HotelPicture ?>"></a>
+            <a class="adi-imgbtn" id="image_target_description" href="./availableRooms1.php" target="_blank"><img src="<?php echo $value->HotelPicture ?>"></a>
             <div class="price text-right padding-left-10 padding-top-10 padding-right-5 Grid-show">
                <!-- ngIf: hotelList.isFavourate=='Yes' --><!-- ngIf: hotelList.isFavourate!='Yes' -->
                <div ng-if="hotelList.isFavourate!='Yes'" class="padding-bottom-10 tooltip fade favourites_icon_container ng-scope" data-title="Add to Favourites"> <i class="fa fa-heart-o adv_heart" data-rel="adh_hotel" id="855912"> </i></div>
@@ -770,7 +804,7 @@ function searchMethod($token) {
                </div>
                <p class="padding-bottom-10 price-text Grid-hide ng-binding"><span ng-bind-html="currency_symbol" class="ng-binding">AED</span> <?php echo $value->TotalPrice ?></p>
                <p class="padding-bottom-10 ppr Grid-hide"><?php echo count($_REQUEST['adults']) ?> room/<?php echo $tot_days ?> night</p>
-               <a target="_blank" id="image_target_description" href="./availableRooms.php?hotelCode=<?php echo $value->HotelCode ?>&token=<?php echo $value->token ?>" class="adi-btn adi-btnrund text-color-white margin-top-10">Select Room </a>
+               <a target="_blank" id="image_target_description" href="./availableRooms1.php?hotelCode=<?php echo $value->HotelCode ?>&<?php echo $request ?>&token=<?php echo $value->token ?>" class="adi-btn adi-btnrund text-color-white margin-top-10">Select Room </a>
             </div>
          </div>
       </div>
@@ -1738,7 +1772,7 @@ function Search_Hotelss() {
 }
 
 </script>
-
-
-
-</div></div></body></html>
+</div>
+</div>
+</body>
+</html>

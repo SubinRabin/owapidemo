@@ -491,8 +491,8 @@ function availablehotelroomsmethod($token) {
                                         <li class="roomlist">
                                             <label for="<?php echo $key ?><?php echo $value1->RoomIndex ?>">
                                             <input type="radio" <?php echo $checked; ?> name="<?php echo $key ?>" id="<?php echo $key ?><?php echo $value1->RoomIndex ?>" value="<?php echo $value1->RoomIndex ?>">
-                                                <div class="av-div availability">
-                                                    <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green"></i> <span class="room-name"><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> </span> <?php 
+                                            <div class="av-div <?php echo $value1->RequestType!="Book" ? 'on-req' : '' ?>">
+                                                <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green"></i> <span class="room-name"><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> </span> <?php 
                                                     if (isset($value1->CancelPolicies) && $value1->CancelPolicies[0]->application=="FREE OF CHARGE") { ?>
                                                       <span class="pull-right" data-toggle="modal" data-target="#myModal<?php echo $key ?><?php echo $value1->RoomIndex ?>">Free of Cancellation till <?php echo $value1->CancelPolicies[0]->ToDate ?> <span>
                                                     <?php } else {
