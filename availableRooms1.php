@@ -1156,18 +1156,18 @@ $(document).ready(function() {
               </div>
             </div>
           </div>
-
 		          <h4 class="text-green margtop25">Room Types <small class="right room-type-validate validated">*Please select all room combination</small></h4>
 		          <div class="row r-type margtop10" id="hrooms">
 		          	<?php $div = 12/count($_REQUEST['adults']);
              		if (isset($res->status) && $res->status==true && isset($res->AvailableHotelRooms)) {
-                  $i=0;
-                  //print_r($res->AvailableHotelRooms);exit;
-                  foreach ($res->AvailableHotelRooms as $key => $value) { ?>
+                  // print_r($res->AvailableHotelRooms->room1);exit;
+                  foreach ($_REQUEST['adults'] as $key => $value) {
+                    $room = 'room'.($key+1);
+                   ?>
 		                <div class="col-sm-<?php echo $div ?> r-type--room">
-		            	    <h5>Room <?php echo $i+1 ?> (Adult <?php echo $_REQUEST['adults'][$i] ?><?php echo $_REQUEST['child'][$i]!="" && $_REQUEST['child'][$i]!=0 ? ' Child '.$_REQUEST['child'][$i] : '' ?>)</h5>
+		            	    <h5>Room <?php echo $key+1 ?> (Adult <?php echo $_REQUEST['adults'][$key] ?><?php echo $_REQUEST['child'][$key]!="" && $_REQUEST['child'][$key]!=0 ? ' Child '.$_REQUEST['child'][$key] : '' ?>)</h5>
 		                  <ul class="list-unstyled r-type--list margtop10">
-		              	  <?php foreach($value as $k => $value1) { 
+		              	  <?php foreach($res->AvailableHotelRooms->$room as $k => $value1) { 
                         $checked = '';
                         if ($k==0) {
                             $checked ='checked';
@@ -1195,7 +1195,7 @@ $(document).ready(function() {
 		                      </div>
 		                      </label>
 		                    </li>
-                        <div id="myModalroom<?php echo $i+1 ?><?php echo $value1->RoomIndex?>" class="modal fade" role="dialog">
+                        <div id="myModalroom<?php echo $key+1 ?><?php echo $value1->RoomIndex?>" class="modal fade" role="dialog">
                           <div class="modal-dialog modal-sm">
 
                           <!-- Modal content-->
@@ -1247,11 +1247,14 @@ $(document).ready(function() {
                         
                           </div>
                         </div>
-		              	<?php  }  ?>
+		              	<?php  
+                  }  ?>
 		              </ul>
 		            </div>
-		        <?php $i++;} 
-          }?>
+		        <?php 
+           } 
+          }
+          ?>
             <div class="clearfix"></div>
             <div class="row margtop10">
           <div class="col-md-12" id="details">
