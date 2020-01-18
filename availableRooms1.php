@@ -783,67 +783,8 @@ function availablehotelroomsmethod($token) {
 </style>
 <script>
 let RoomCombination = new Array();
+RoomCombination = <?php echo json_encode($res->RoomCombination) ?>;
 $(".xml-default").remove();
-function bubbleSort(ul) {
-  var done = false;
-  while (!done) {
-    done = true;
-    for (var i = 1; i < ul.find(".roomlist").length; i += 1) {
-      if (parseInt($(ul).find(".roomlist:eq("+[i-1]+")").find(".com-amnt").val()) > parseInt($(ul).find(".roomlist:eq("+[i]+")").find(".com-amnt").val())) {
-         done = false;
-        $(ul).prepend($(ul).find(".roomlist:eq("+[i]+")"));
-      }
-    }
-  }
-  return ul;
-}
-function RoomCombinationinitCheck() {
-  $(".r-type--room .r-type--list").each(function(j,u) {
-    var arr = $(u);
-    bubbleSort(arr);
-  })
-  $('input[name="Room1"]:first').prop('checked',true);
-  RoomCombinationCheck()
-}
-function RoomCombinationCheck() {
-  var room1 =  $('input[name="Room1"]:checked').val();
-  var availableRooms = $('.r-type--room').not(':first-child').find('.availability').closest('li');
-  defaultcheck();
-  var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
-  $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
-  $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
-  $.each($('input[type="radio"]:checked'),function(i,v) {
-      $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
-    }) 
-  var sum = 0
-  $.each(comAmnt,function(i,v) {
-    sum += Number($(this).val().replace(/,/g , '')); 
-  });
-  $(".b-rates--grand-total").text(sum.toFixed(2));
-}
-function defaultcheck() {
-  for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
-    $('input[name="Room'+i+'"]:first').prop('checked',true);
-  }
-}
-function defaultRateCheck() {
-  if ($("#def_rid").val()!="" && $("#def_cid").val()!="") {
-    var def_rid= $("#def_rid").val();
-    var def_cid= $("#def_cid").val();
-    $("#Room"+def_rid+"-"+def_cid).trigger('click');
-  }
-  var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
-  $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
-  $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
-  $.each($('input[type="radio"]:checked'),function(i,v) {
-    $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
-  }) 
-  var sum = 0
-  $.each(comAmnt,function(i,v) {
-    sum += Number($(this).val().replace(/,/g , '')); 
-  });
-  $(".b-rates--grand-total").text(sum.toFixed(2));
-}
 $(document).ready(function() {
   var btn = $('#button');
   $(window).scroll(function() {
@@ -857,24 +798,38 @@ $(document).ready(function() {
     e.preventDefault();
     $('html, body').animate({scrollTop:0}, '300');
   }); 
-  $('input[name="Room1"]').on('change',function() {
-    RoomCombinationCheck();
-  });
-  $('input[type="radio"]').on('change',function() {
-    var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
-    $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
-    $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
-    $.each($('input[type="radio"]:checked'),function(i,v) {
-      $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
-    }) 
-    var sum = 0
-    $.each(comAmnt,function(i,v) {
-      sum += Number($(this).val().replace(/,/g , '')); 
+  if(RoomCombination=="All") {
+    $('input[name="Room1"]').on('change',function() {
+        RoomCombinationCheckall();
     });
-    $(".b-rates--grand-total").text(sum.toFixed(2));
-  });
-  RoomCombinationinitCheck();
-  // ConSelectFun();
+    $('input[type="radio"]').on('change',function() {
+        var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
+        $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
+        $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
+        $.each($('input[type="radio"]:checked'),function(i,v) {
+          $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
+        }) 
+        var sum = 0
+        $.each(comAmnt,function(i,v) {
+          sum += Number($(this).val().replace(/,/g , '')); 
+        });
+        $(".b-rates--grand-total").text(sum.toFixed(2));
+    });
+    RoomCombinationinitCheckall();
+  } else {
+    $(document).on('change','input[name="Room1"]',function(){
+      RoomCombinationCheck();
+    });
+    $(document).on('change','input[type="radio"]',function(){
+      var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
+      var sum = 0
+      $.each(comAmnt,function(i,v) {
+        sum += Number($(this).val().replace(/,/g , '')); 
+      });
+      $(".b-rates--grand-total").text(sum);
+    });
+    RoomCombinationinitCheck();
+  }
   var startStamp = new Date($("#startTime").val()).getTime();
   var start = new Date($("#startTime").val());
   var maxTime = (30*60)*1000;
@@ -882,7 +837,6 @@ $(document).ready(function() {
   function updateProgress(percentage) {
     $("#book-progress").val((100-percentage));
   }
-
   function animateUpdate() {
       var now = new Date();
       var timeDiff = now.getTime() - start.getTime();
@@ -922,28 +876,167 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
    $(".details").on("click", function( e ) {
-    
     e.preventDefault();
-
     $("body, html").animate({ 
         scrollTop: $( $(this).attr('href') ).offset().top 
-    }, 600);
-    
-});
-  $(".cancellation-span").hover(function(){
-    alert("hi");
-    $(this).closest('.roomlist').find('.cancellation-table').css("display", "block");
-    }, function() {
-    $(this).closest('.roomlist').find('.cancellation-table').css("display", "none");
+    }, 600);  
   });
 })
-// function cancellationModal() {
-//   $("#myModal").load(base_url+'OfflineRequests/OfflineTourRequestModal');
-//   $('#myModal').modal({
-//       backdrop: 'static',
-//       keyboard: false
-//   });
-// }
+function bubbleSort(ul) {
+  var done = false;
+  while (!done) {
+    done = true;
+    for (var i = 1; i < ul.find(".roomlist").length; i += 1) {
+      if (parseInt($(ul).find(".roomlist:eq("+[i-1]+")").find(".com-amnt").val()) > parseInt($(ul).find(".roomlist:eq("+[i]+")").find(".com-amnt").val())) {
+         done = false;
+        $(ul).prepend($(ul).find(".roomlist:eq("+[i]+")"));
+      }
+    }
+  }
+  return ul;
+}
+function RoomCombinationinitCheckall() {
+  $(".r-type--room .r-type--list").each(function(j,u) {
+    var arr = $(u);
+    bubbleSort(arr);
+  })
+  $('input[name="Room1"]:first').prop('checked',true);
+  RoomCombinationCheckall();
+}
+function RoomCombinationCheckall() {
+  var room1 =  $('input[name="Room1"]:checked').val();
+  var availableRooms = $('.r-type--room').not(':first-child').find('.availability').closest('li');
+  defaultcheckall();
+  var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
+  $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
+  $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
+  $.each($('input[type="radio"]:checked'),function(i,v) {
+      $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
+    }) 
+  var sum = 0
+  $.each(comAmnt,function(i,v) {
+    sum += Number($(this).val().replace(/,/g , '')); 
+  });
+  $(".b-rates--grand-total").text(sum.toFixed(2));
+}
+function defaultcheckall() {
+  for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+    $('input[name="Room'+i+'"]:first').prop('checked',true);
+  }
+}
+function defaultRateCheckall() {
+  if ($("#def_rid").val()!="" && $("#def_cid").val()!="") {
+    var def_rid= $("#def_rid").val();
+    var def_cid= $("#def_cid").val();
+    $("#Room"+def_rid+"-"+def_cid).trigger('click');
+  }
+  var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
+  $("#room_index").val($('input[type="radio"]:checked').closest('li').find('.room_id').val());
+  $("#contract_index").val($('input[type="radio"]:checked').closest('li').find('.contract_id').val());
+  $.each($('input[type="radio"]:checked'),function(i,v) {
+    $('input[name="RequestType['+i+']"]').val($(this).closest('li').find('.RequestType').val());
+  }) 
+  var sum = 0
+  $.each(comAmnt,function(i,v) {
+    sum += Number($(this).val().replace(/,/g , '')); 
+  });
+  $(".b-rates--grand-total").text(sum.toFixed(2));
+}
+function RoomCombinationinitCheck() {
+  for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+    $(".ulRoom"+i).html($(".ulRoom1").html());
+    $(".ulRoom"+i+" .roomval").each(function(){
+      $(this).attr("id","Room"+i+$(this).val());
+      $(this).attr("name","Room"+i);
+      $(this).closest('li').removeAttr('id').attr('id','listRoom'+i+$(this).val());
+      $(this).closest('label').removeAttr('for').attr('for','Room'+i+$(this).val());
+    });
+  }
+  $(".r-type").find('input').prop('disabled',true);
+  $.each(RoomCombination,function(j,v) {
+    if (isNaN(RoomCombination.RoomIndex)) {
+      $('#Room'+1+v.RoomIndex).prop('disabled',false);
+      $('#listRoom'+1+v.RoomIndex).removeClass("hide");
+      $('#Room'+1+v.RoomIndex).closest('li').find('.av-div').addClass('availability');
+      if(j==0) {
+        $('#Room'+1+v.RoomIndex).prop('checked',true);
+      }
+    } else {
+      $('#Room'+1+RoomCombination.RoomIndex).prop('disabled',false);
+      $('#listRoom'+1+RoomCombination.RoomIndex).removeClass("hide");
+      $('#Room'+1+RoomCombination.RoomIndex).closest('li').find('.av-div').addClass('availability');
+      if(j==0) {
+        $('#Room'+1+RoomCombination.RoomIndex).prop('checked',true);
+      }
+    }  
+  });
+  RoomCombinationCheck();
+} 
+function RoomCombinationCheck() {
+  var room1 =  $('input[name="Room1"]:checked').val();
+  var room1amnt =  $("input[name='Room1']:checked").closest("li").find(".com-amnt").val();
+  var room1name =  $("input[name='Room1']:checked").closest("li").find(".com-name").val();
+  for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+    $(".r-type").find('input[name="Room'+i+'"]').prop('disabled',true);
+    $(".r-type").find('input[name="Room'+i+'"]').closest('li').find('.av-div').removeClass('availability');
+    $(".r-type").find('input[name="Room'+i+'"]').prop('checked',false);
+  }
+  $.each(RoomCombination,function(j,v) {
+    for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+      if (isNaN(RoomCombination.RoomIndex)) {       
+        $('#listRoom'+i+v.RoomIndex[i-1]).removeClass("hide");   
+      } else {
+        $('#listRoom'+i+RoomCombination.RoomIndex[i-1]).removeClass("hide");
+      }
+    }
+  });
+  $.each(RoomCombination,function(j,v) {
+    if (isNaN(RoomCombination.RoomIndex)) {
+      if (v.RoomIndex[0]==room1) {
+        for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+          $('#Room'+i+v.RoomIndex[i-1]).prop('disabled',false);
+          $('#Room'+i+v.RoomIndex[i-1]).closest('li').find('.av-div').addClass('availability'); 
+        }
+      }
+    }
+  });
+  var availableRooms = $('.r-type--room').not(':first-child').find('.availability').closest('li');
+  $.each(availableRooms, function(){
+      $(this).closest('ul').prepend($(this).closest('li'));
+  })
+  var comAmnt = $('input[type="radio"]:checked').closest('li').find('.com-amnt');
+  var sum = 0
+  $.each(comAmnt,function(i,v) {
+    sum += Number($(this).val().replace(/,/g , '')); 
+  });
+  $(".b-rates--grand-total").text(sum);
+  defaultcheck();
+}
+function defaultcheck() {
+  var room1 =  $('input[name="Room1"]:checked').val();
+  var room1amnt =  $("input[name='Room1']:checked").closest("li").find(".com-amnt").val();
+  var room1name =  $("input[name='Room1']:checked").closest("li").find(".com-name").val();
+  $.each(RoomCombination,function(j,v) {
+    if (isNaN(RoomCombination.RoomIndex)) {
+      if (v.RoomIndex[0]==room1) {
+        for (var i = 2; i <= <?php echo count($_REQUEST['adults']) ?>; i++) {
+           if (j==0) {
+            var temp  = 0;
+            $( "input[name='Room"+i+"']" ).each(function( index ) {
+              if($(this).closest('li').find('.com-amnt').val()==room1amnt && $(this).closest('li').find('.com-name').val()==room1name  && $(this).prop("disabled")==false) {
+                $( this ).trigger("click");
+                temp = 1;
+              }  
+            });
+            if (temp==0) {
+              $('#Room'+i+v.RoomIndex[i-1]).prop('checked',true);
+            }
+          }
+        }
+      }
+    }
+  });
+}
 </script>
 <body id="top" class ="thebg">
   <div class="header" style="background: white">
@@ -1160,101 +1253,189 @@ $(document).ready(function() {
 		          <div class="row r-type margtop10" id="hrooms">
 		          	<?php $div = 12/count($_REQUEST['adults']);
              		if (isset($res->status) && $res->status==true && isset($res->AvailableHotelRooms)) {
-                  // print_r($res->AvailableHotelRooms->room1);exit;
-                  foreach ($_REQUEST['adults'] as $key => $value) {
-                    $room = 'room'.($key+1);
-                   ?>
-		                <div class="col-sm-<?php echo $div ?> r-type--room">
-		            	    <h5>Room <?php echo $key+1 ?> (Adult <?php echo $_REQUEST['adults'][$key] ?><?php echo $_REQUEST['child'][$key]!="" && $_REQUEST['child'][$key]!=0 ? ' Child '.$_REQUEST['child'][$key] : '' ?>)</h5>
-		                  <ul class="list-unstyled r-type--list margtop10">
-		              	  <?php foreach($res->AvailableHotelRooms->$room as $k => $value1) { 
-                        $checked = '';
-                        if ($k==0) {
-                            $checked ='checked';
-                        } 
-                        $room = explode("-",$value1->RoomIndex);
-                        ?>
-		                    <li class="roomlist">
-                          <label for="<?php echo $key ?><?php echo $value1->RoomIndex ?>">
-                          <input type="radio" <?php echo $checked; ?> name="<?php echo $key ?>" id="<?php echo $key ?><?php echo $value1->RoomIndex ?>" value="<?php echo $value1->RoomIndex ?>">
-		                      <div class="av-div availability <?php echo $value1->RequestType!="Book" ? 'on-req' : '' ?>">
-		                        <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green"></i> <span class="room-name"><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> </span> <?php 
-                            if (isset($value1->CancelPolicies) && $value1->CancelPolicies[0]->application=="FREE OF CHARGE") { ?>
-                              <span class="pull-right" data-toggle="modal" data-target="#myModal<?php echo $key ?><?php echo $value1->RoomIndex ?>">Free of Cancellation till <?php echo $value1->CancelPolicies[0]->ToDate ?> <span>
-                            <?php } else { ?>
-                              <span class="pull-right" data-toggle="modal" data-target="#myModal<?php echo $key ?><?php echo $value1->RoomIndex ?>">cancellation<span>
-                            <?php } ?></h5> 
-                              
-    		                    <p class="text-green m-0 bold">
-    	                      	<input type="hidden" class="RequestType" value="<?php echo $value1->RequestType ?>">
-    	                      	<input type="hidden" class="room_id" value="<?php echo $room[1] ?>">
-    	                      	<input type="hidden" class="contract_id" value="<?php echo $room[0] ?>">
-    	                      	<input type="hidden" class="com-amnt" value="<?php echo $value1->Price; ?>">
-    	                      	<small>AED <?php echo $value1->Price; ?> <?php echo $value1->RequestType!="Book" ? ' - On Request' : '' ?></small>
-		                        </p>
-		                      </div>
-		                      </label>
-		                    </li>
-                        <div id="myModalroom<?php echo $key+1 ?><?php echo $value1->RoomIndex?>" class="modal fade" role="dialog">
-                          <div class="modal-dialog modal-sm">
-
-                          <!-- Modal content-->
-                              <div class="modal-content">
-                              <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                              <h4 class="modal-title">Cancellation Policies</h4>
+                  if($res->RoomCombination=="All") {
+                    foreach ($_REQUEST['adults'] as $key => $value) {
+                      $room = 'room'.($key+1);      ?>
+                      <div class="col-sm-<?php echo $div ?> r-type--room">
+                        <h5>Room <?php echo $key+1 ?> (Adult <?php echo $_REQUEST['adults'][$key] ?><?php echo $_REQUEST['child'][$key]!="" && $_REQUEST['child'][$key]!=0 ? ' Child '.$_REQUEST['child'][$key] : '' ?>)</h5>
+                        <ul class="list-unstyled r-type--list margtop10">
+                        <?php foreach($res->AvailableHotelRooms->$room as $k => $value1) { 
+                          $checked = '';
+                          if ($k==0) {
+                              $checked ='checked';
+                          } 
+                          $room = explode("-",$value1->RoomIndex);
+                          ?>
+                          <li class="roomlist">
+                            <label for="<?php echo $key ?><?php echo $value1->RoomIndex ?>">
+                            <input type="radio" <?php echo $checked; ?> name="<?php echo $key ?>" id="<?php echo $key ?><?php echo $value1->RoomIndex ?>" value="<?php echo $value1->RoomIndex ?>">
+                            <div class="av-div availability <?php echo $value1->RequestType!="Book" ? 'on-req' : '' ?>">
+                              <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green"></i> <span class="room-name"><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> </span> <?php 
+                              if (isset($value1->CancelPolicies) && $value1->CancelPolicies[0]->application=="FREE OF CHARGE") { ?>
+                                <span class="pull-right" data-toggle="modal" data-target="#myModalroom<?php echo $key+1 ?><?php echo $value1->RoomIndex ?>">Free of Cancellation till <?php echo $value1->CancelPolicies[0]->ToDate ?> <span>
+                              <?php } else { ?>
+                                <span class="pull-right" data-toggle="modal" data-target="#myModalroom<?php echo $key+1 ?><?php echo $value1->RoomIndex ?>">cancellation<span>
+                              <?php } ?></h5> 
+                                
+                              <p class="text-green m-0 bold">
+                                <input type="hidden" class="RequestType" value="<?php echo $value1->RequestType ?>">
+                                <input type="hidden" class="room_id" value="<?php echo $room[1] ?>">
+                                <input type="hidden" class="contract_id" value="<?php echo $room[0] ?>">
+                                <input type="hidden" class="com-amnt" value="<?php echo $value1->Price; ?>">
+                                <small>AED <?php echo $value1->Price; ?> <?php echo $value1->RequestType!="Book" ? ' - On Request' : '' ?></small>
+                              </p>
                             </div>
-                            <div class="modal-body">
-                              <table class="table table-bordered table-hover cancellation-table">
-                                  <thead style="background: #0074b9;color: white;">
-                                    <tr>
-                                      <td>Cancelled on or After</td>
-                                      <td>Cancelled on or Before</td>
-                                      <td>Cancellation Charge</td>
-                                    </tr>
-                                  </thead>
-                                 <tbody> 
+                            </label>
+                          </li>
+                          <div id="myModalroom<?php echo $key+1 ?><?php echo $value1->RoomIndex?>" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-sm">
 
-                                  <?php 
-                                  if (isset($value1->CancelPolicies)) {
-                                  foreach ($value1->CancelPolicies as $Cancvalue) { 
-                                    if($Cancvalue->application == "Nonrefundable") { ?>
+                            <!-- Modal content-->
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Cancellation Policies</h4>
+                              </div>
+                              <div class="modal-body">
+                                <table class="table table-bordered table-hover cancellation-table">
+                                    <thead style="background: #0074b9;color: white;">
                                       <tr>
-                                        <td colspan="4">This booking is Nonrefundable.</td>
+                                        <td>Cancelled on or After</td>
+                                        <td>Cancelled on or Before</td>
+                                        <td>Cancellation Charge</td>
                                       </tr>
-                                    <?php } else { 
-                                      $finalAmount = $value1->Price;
-                                      if ($Cancvalue->application=="FIRST NIGHT") {
-                                        $finalAmount = ($value1->Price/$tot_days);
-                                      }
+                                    </thead>
+                                   <tbody> 
 
-                                      if ($Cancvalue->application=="FREE OF CHARGE") {
-                                        $finalAmount = 0;
-                                      }
-                                      $charge = $finalAmount*($Cancvalue->CancellationCharge/100);  
-                                      ?>
-                                      <tr>
-                                        <td><?php echo $Cancvalue->FromDate ?></td>
-                                        <td><?php echo $Cancvalue->ToDate ?></td>
-                                        <td><?php echo "AED ".$charge ?> (<?php echo $Cancvalue->application ?>) </td>
-                                      </tr>
-                                    <?php } 
-                                } } ?>
-                                </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        
+                                    <?php 
+                                    if (isset($value1->CancelPolicies)) {
+                                    foreach ($value1->CancelPolicies as $Cancvalue) { 
+                                      if($Cancvalue->application == "Nonrefundable") { ?>
+                                        <tr>
+                                          <td colspan="4">This booking is Nonrefundable.</td>
+                                        </tr>
+                                      <?php } else { 
+                                        $finalAmount = $value1->Price;
+                                        if ($Cancvalue->application=="FIRST NIGHT") {
+                                          $finalAmount = ($value1->Price/$tot_days);
+                                        }
+
+                                        if ($Cancvalue->application=="FREE OF CHARGE") {
+                                          $finalAmount = 0;
+                                        }
+                                        $charge = $finalAmount*($Cancvalue->CancellationCharge/100);  
+                                        ?>
+                                        <tr>
+                                          <td><?php echo $Cancvalue->FromDate ?></td>
+                                          <td><?php echo $Cancvalue->ToDate ?></td>
+                                          <td><?php echo "AED ".$charge ?> (<?php echo $Cancvalue->application ?>) </td>
+                                        </tr>
+                                      <?php } 
+                                  } } ?>
+                                  </tbody>
+                                  </table>
+                              </div>
                           </div>
-                        </div>
-		              	<?php  
-                  }  ?>
-		              </ul>
-		            </div>
-		        <?php 
-           } 
-          }
-          ?>
+                          
+                            </div>
+                          </div>
+                        <?php  
+                        }  ?>
+                        </ul>
+                      </div>
+                    <?php 
+                    } 
+                  } else {
+                    for ($i=0; $i < count($_REQUEST['adults']) ; $i++) {
+                      $room = 'room'.($i+1); ?> 
+                      <div class="col-sm-<?php echo $div ?> r-type--room">
+                      <h5>Room <?php echo $i+1 ?> (Adult <?php echo $_REQUEST['adults'][$i] ?><?php echo $_REQUEST['child'][$i]!="" && $_REQUEST['child'][$i]!=0 ? ' Child '.$_REQUEST['child'][$i] : '' ?>)</h5>
+                      <ul class="list-unstyled r-type--list ulRoom<?php echo $i+1 ?>">
+                        <?php foreach($res->AvailableHotelRooms->$room as $k => $value1) { 
+                          
+                          $checked = '';
+                          if ($k==0) {
+                              $checked ='checked';
+                          } 
+                          $room = explode("-",$value1->RoomIndex);
+                          ?>                 
+                          <li id="listRoom<?php echo $i+1 ?><?php echo $value1->RoomIndex ?>" class="hide">
+                            <label for="Room<?php echo $i+1 ?><?php echo $value1->RoomIndex ?>">
+                            <input type="radio" <?php echo $checked; ?> name="Room<?php echo $i+1 ?>" id="Room<?php echo $i+1 ?><?php echo $value1->RoomIndex ?>" class="roomval" value="<?php echo $value1->RoomIndex ?>">
+                            <div class="av-div">
+                              <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green" style="    margin-right: 2px;"></i><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> 
+                              <?php if (isset($value1->CancelPolicies) && $value1->CancelPolicies[0]->application=="FREE OF CHARGE") { ?>
+                                <span class="pull-right" data-toggle="modal" data-target="#myTboModalroom<?php echo $i+1 ?><?php echo $value1->RoomIndex ?>">Free of Cancellation till <?php echo $value1->CancelPolicies[0]->ToDate ?> <span>
+                              <?php } else { ?>
+                                <span class="pull-right" data-toggle="modal" data-target="#myTboModalroom<?php echo $i+1 ?><?php echo $value1->RoomIndex ?>">cancellation<span>
+                              <?php } ?></h5> 
+                               <p class="text-green m-0 bold">
+                                <input type="hidden" class="RequestType" value="<?php echo $value1->RequestType ?>">
+                                <input type="hidden" class="room_id" value="<?php echo $room[1] ?>">
+                                <input type="hidden" class="contract_id" value="<?php echo $room[0] ?>">
+                                <input type="hidden" class="com-amnt" value="<?php echo $value1->Price; ?>">
+                                <small>AED <?php echo $value1->Price; ?> <?php echo $value1->RequestType!="Book" ? ' - On Request' : '' ?></small>
+                              </p>                                    
+                            </div>
+                            </label>
+                          </li>
+                          <div id="myTboModalroom<?php echo $i+1 ?><?php echo $value1->RoomIndex?>" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-sm">
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">Cancellation Policies</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <table class="table table-bordered table-hover cancellation-table">
+                                      <thead style="background: #0074b9;color: white;">
+                                        <tr>
+                                          <td>Cancelled on or After</td>
+                                          <td>Cancelled on or Before</td>
+                                          <td>Cancellation Charge</td>
+                                        </tr>
+                                      </thead>
+                                     <tbody> 
+
+                                      <?php 
+                                      if (isset($value1->CancelPolicies)) {
+                                      foreach ($value1->CancelPolicies as $Cancvalue) { 
+                                        if($Cancvalue->application == "Nonrefundable") { ?>
+                                          <tr>
+                                            <td colspan="4">This booking is Nonrefundable.</td>
+                                          </tr>
+                                        <?php } else { 
+                                          $finalAmount = $value1->Price;
+                                          if ($Cancvalue->application=="FIRST NIGHT") {
+                                            $finalAmount = ($value1->Price/$tot_days);
+                                          }
+
+                                          if ($Cancvalue->application=="FREE OF CHARGE") {
+                                            $finalAmount = 0;
+                                          }
+                                          $charge = $finalAmount*($Cancvalue->CancellationCharge/100);  
+                                          ?>
+                                          <tr>
+                                            <td><?php echo $Cancvalue->FromDate ?></td>
+                                            <td><?php echo $Cancvalue->ToDate ?></td>
+                                            <td><?php echo "AED ".$charge ?> (<?php echo $Cancvalue->application ?>) </td>
+                                          </tr>
+                                        <?php } 
+                                    } } ?>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <?php  
+                        }  ?>
+                        </ul>
+                      </div>
+                    <?php }
+                  }       
+                } ?>
             <div class="clearfix"></div>
             <div class="row margtop10">
           <div class="col-md-12" id="details">
