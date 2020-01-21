@@ -757,7 +757,7 @@ function availablehotelroomsmethod($token) {
   }
 
   /* Change the background color on mouse-over */
-  .header a:hover {
+  .header a.menu:hover {
     background-color: #186900;
     color: white;
   }
@@ -1167,7 +1167,7 @@ function defaultcheck() {
             <div class="col-sm-12 ">
             <div class="row b-rates margtop10" style="background: #f0f9ff;">
               <!-- <h5 class="b-rates--tax">Tax Amount : <span class="right">AED 1250</span></h5> -->
-              <h5 class="text-green pull-right" style="font-weight: bold">GRAND TOTAL : AED <span class="b-rates--grand-total">0</span><button id="Continue_book" type="button" name="Continue_book"class="bluebtn" style="margin-left: 5px">Continue</button><span>
+              <h5 class="text-green pull-right" style="font-weight: bold">GRAND TOTAL : AED <span class="b-rates--grand-total">0</span><button id="Continue_book_api" type="button" name="Continue_book"class="bluebtn" style="margin-left: 5px">Continue</button><span>
             </h5>
             </div>
           </div>
@@ -1268,7 +1268,7 @@ function defaultcheck() {
                           ?>
                           <li class="roomlist">
                             <label for="<?php echo $key ?><?php echo $value1->RoomIndex ?>">
-                            <input type="radio" <?php echo $checked; ?> name="<?php echo $key ?>" id="<?php echo $key ?><?php echo $value1->RoomIndex ?>" value="<?php echo $value1->RoomIndex ?>">
+                            <input type="radio" <?php echo $checked; ?> name="Room<?php echo $key+1 ?>" id="<?php echo $key ?><?php echo $value1->RoomIndex ?>" value="<?php echo $value1->RoomIndex ?>">
                             <div class="av-div availability <?php echo $value1->RequestType!="Book" ? 'on-req' : '' ?>">
                               <h5 class="r-type--name m-0"><i class="fa fa-check-circle text-green"></i><i class="fa fa-circle-thin text-green"></i> <span class="room-name"><?php echo $value1->RoomName ?> - <?php echo $value1->board ?> </span> <?php 
                               if (isset($value1->CancelPolicies) && $value1->CancelPolicies[0]->application=="FREE OF CHARGE") { ?>
@@ -1527,7 +1527,7 @@ function defaultcheck() {
 <!-- END OF CONTENT -->
   
   <!-- Central Modal Medium Warning -->
-  <div class="modal fade " id="boardAllocation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade " id="boardAllocation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
   <style>
     .footer a {
           color: white;
@@ -1552,7 +1552,6 @@ function defaultcheck() {
       }
 
   </style>
-  </div>
  <div class="footerbgblack hidden-xs" style="background: #186900;padding: 20px 0">
   <div class="container">   
     
@@ -1581,6 +1580,12 @@ function defaultcheck() {
 
 
 </body>
+<script>
+  $('#Continue_book_api').click(function () {     
+    $("#payment_form").attr("action","./bookingreview.php");
+    $("#payment_form").submit();       
+  });
+  </script>
 <script src="skin/assets/js/initialize-google-map.js"></script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>
 
