@@ -767,8 +767,8 @@ function bookingreviewmethod($token) {
       					    </thead>
       					    <tbody> 
       					    	<?php 
-                      if (isset($roomdetails->Cancellation_policy[$i])) {
-                        foreach($roomdetails->Cancellation_policy[$i] as $value) { 
+                      if (isset($roomdetails->Cancellation_policy)) {
+                        foreach($roomdetails->Cancellation_policy as $value) { 
                           if ($value->application=="Nonrefundable") {  ?>
                               <tr>
                                 <td colspan="3">
