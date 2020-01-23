@@ -769,28 +769,26 @@ function bookingreviewmethod($token) {
       					    	<?php 
                       if (isset($roomdetails->Cancellation_policy)) {
                         foreach($roomdetails->Cancellation_policy as $value) { 
-                          if ($value[0]->application=="Nonrefundable") {  ?>
+                          if ($value->application=="Nonrefundable") {  ?>
                               <tr>
                                 <td colspan="3">
                                     This booking is Nonrefundable
                                 </td>
                               </tr>
-                          <?php }  else {
-                            foreach ($value as $key => $Cancvalue) { ?>
+                          <?php }  else { ?>
                               <tr>
-                                <td><?php echo date("d/m/Y", strtotime($Cancvalue->FromDate )) ?></td>
-                                <td><?php  echo date("d/m/Y", strtotime($Cancvalue->ToDate )) ?></td>
-                                <td><?php if ($Cancvalue->application=="FIRST NIGHT") {
+                                <td><?php echo date("d/m/Y", strtotime($value->FromDate )) ?></td>
+                                <td><?php  echo date("d/m/Y", strtotime($value->ToDate )) ?></td>
+                                <td><?php if ($value->application=="FIRST NIGHT") {
                                       $finalAmount = $roomdetails->totalroomamount->price;
                                     }
-                                    if ($Cancvalue->application=="FREE OF CHARGE") {
+                                    if ($value->application=="FREE OF CHARGE") {
                                       $finalAmount = 0;
                                     }
-                                    $charge = $roomdetails->totalroomamount->price*($Cancvalue->CancellationCharge/100);
-                                    echo $charge." AED (".$Cancvalue->application.")"?></td>
+                                    $charge = $roomdetails->totalroomamount->price*($value->CancellationCharge/100);
+                                    echo $charge." AED (".$value->application.")"?></td>
                               </tr>
-                            <?php } 
-      					    		  }
+                          <?php }
                         } 
                       } else { ?> 
                         <tr>
