@@ -1620,6 +1620,33 @@ function defaultcheck() {
 
 </body>
 <script>
+  var letters = /[A-Za-z]+$/;
+  $('.validate').on('focusout',function(e) {
+      $(this).val($.trim($(this).val()));
+      if ($(this).val()=="") {
+          $(this).removeClass('validated');
+      } else {
+          $(this).addClass('validated');
+      }
+  })
+  $('.name-validate').on('focusout',function(e) {
+      $(this).val($.trim($(this).val()));
+      if ($(this).val()=="") {
+          $(".traveller-validate").text('');
+          $(this).removeClass('validated');
+      } else {
+          $(this).addClass('validated');
+          if($(this).val().match(letters)) {
+              if ($(this).val().length < 2) {
+                  $(".traveller-validate").text('Minimum two letters should be used in First name and Last name!');
+              } else {
+                  $(".traveller-validate").text('');
+              }
+          } else {
+              $(".traveller-validate").text('Please check alphabets only accepted in First name and Last name!');
+          }
+      }
+  })
   $('#Continue_book_api').click(function () {     
     $("#payment_form").attr("action","./bookingreview.php");
     $("#payment_form").submit();       
