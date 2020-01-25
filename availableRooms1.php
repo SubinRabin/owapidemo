@@ -1518,6 +1518,11 @@ function defaultcheck() {
             <p>No details found.</p>
           <?php } ?>
           </div>
+<script type='text/javascript' src="skin/assets/js/initialize-google-map.js"></script>
+<script type="text/javascript">
+  loadScript();
+  initialize();
+</script>
           <div class="clearfix"></div>
           <div class="col-md-12" id="map">
             <h4 class="text-green margtop25 text-justify">Map<small class="right traveller-validate validated"></small></h4>
@@ -1620,7 +1625,6 @@ function defaultcheck() {
     $("#payment_form").submit();       
   });
   </script>
-<script type='text/javascript' src="skin/assets/js/initialize-google-map.js"></script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>
 
 <script src="skin/assets/js/functions.js"></script>
