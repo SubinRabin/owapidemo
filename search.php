@@ -393,7 +393,7 @@ if (isset($_REQUEST['destination'])) {
 }
 function authMethod() {
     $curl = curl_init();
-    $url = 'https://sandbox-authapi.otelseasy.com';
+    $url = 'https://sandbox-authapi.otelseasy.com/v1';
     $auth = array(
         'Agent_Code' => 'ABCDEF',
         'Username' => 'sanbox-user',
@@ -415,7 +415,7 @@ function authMethod() {
 
 function searchMethod($token) {
     $curl = curl_init();
-    $url = 'https://sandbox-hotelsearchapi.otelseasy.com';
+    $url = 'https://sandbox-hotelsearchapi.otelseasy.com/v1';
     $cityandcountry = explode(",", $_REQUEST['destination']);
 
     $dateRange = explode(" - ", $_REQUEST['daterangeResorts']);

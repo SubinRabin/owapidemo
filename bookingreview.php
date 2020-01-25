@@ -6,12 +6,11 @@ if (isset($_REQUEST['hotel_id']) && isset($_REQUEST['token']) ) {
    if (isset($dd->token)) {
        $res = bookingreviewmethod($dd->token);
        $res = json_decode($res);
-       // print_r($res);exit;
    }
 }
 function authMethod() {
     $curl = curl_init();
-    $url = 'https://sandbox-authapi.otelseasy.com';
+    $url = 'https://sandbox-authapi.otelseasy.com/v1';
     $auth = array(
         'Agent_Code' => 'ABCDEF',
         'Username' => 'sanbox-user',
@@ -33,7 +32,7 @@ function authMethod() {
 
 function bookingreviewmethod($token) {
     $curl = curl_init();
-    $url = 'https://sandbox-bookingreviewapi.otelseasy.com';
+    $url = 'https://sandbox-bookingreviewapi.otelseasy.com/v1';
     $roomindex = array();
     for($i=0;$i<$_REQUEST['no_of_rooms'];$i++) {
     	$room = "Room".($i+1);

@@ -5,11 +5,13 @@ if (isset($_REQUEST['hotelCode']) && isset($_REQUEST['token']) ) {
    if (isset($dd->token)) {
        $res = availablehotelroomsmethod($dd->token);
        $res = json_decode($res);
+       $details = hoteldetailsmethod($dd->token);
+       $details = json_decode($details);
    }
 }
 function authMethod() {
     $curl = curl_init();
-    $url = 'https://sandbox-authapi.otelseasy.com';
+    $url = 'https://sandbox-authapi.otelseasy.com/v1';
     $auth = array(
         'Agent_Code' => 'ABCDEF',
         'Username' => 'sanbox-user',
@@ -31,10 +33,33 @@ function authMethod() {
 
 function availablehotelroomsmethod($token) {
     $curl = curl_init();
-    $url = 'https://sandbox-availablehotelroomsapi.otelseasy.com';
+    $url = 'https://sandbox-availablehotelroomsapi.otelseasy.com/v1';
     $auth = array(
         'token' => $_REQUEST['token'],
         'hotelcode' => $_REQUEST['hotelCode'] ,
+    );
+
+    $data = json_encode($auth);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_URL, $url);
+
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'authorization: Bearer  '.$token.'',
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    $result = curl_exec($curl);
+    curl_close($curl);
+    return $result;
+}
+
+function hoteldetailsmethod($token) {
+    $curl = curl_init();
+    $url = 'https://sandbox-hoteldetailsapi.otelseasy.com/v1';
+    $auth = array(
+        'token' => $_REQUEST['token'],
+        'hotelcode' => $_REQUEST['hotelCode']
     );
 
     $data = json_encode($auth);
@@ -1093,7 +1118,19 @@ function defaultcheck() {
 		          </h3>
 
 		          <div class="row">
-		            <div class="col-sm-12">
+                <div class="col-sm-3">
+                  <p><span class="bold"><?php echo $details->HotelDetails->HotelName ?></span></p>
+                  <p>
+                    <?php if ($details->HotelDetails->HotelRating ==10) { ?>
+                      <label style="width:100px;" class="hotel-rating"><i class="fa fa-building" style="color: #258732;"></i> Apartment</label>
+                    <?php } else { ?>
+                      <img src="skin/images/bigrating-<?php echo $details->HotelDetails->HotelRating ?>.png" alt=""/>
+                    <?php } ?>
+                    </p>
+                
+                  <p class="text-muted"><?php echo $details->HotelDetails->Address?></p>
+                </div>
+		            <div class="col-sm-9">
 
 		              <div class="padding20 margtop15" style="background-color: #f0f9ff">
 		                <div class="row booking-details-info">
@@ -1440,13 +1477,13 @@ function defaultcheck() {
             <div class="row margtop10">
           <div class="col-md-12" id="details">
             <h4 class="text-green margtop25 text-justify">Hotel Details<small class="right traveller-validate validated"></small></h4>
-            <p style="text-align: justify"><?php echo isset($view[0]->hotel_description)?($view[0]->hotel_description):"No details found" ?></p>
+            <p style="text-align: justify"><?php echo isset($details->HotelDetails->Description)?($details->HotelDetails->Description):"No details found" ?></p>
           </div>
          
           <div class="clearfix"></div>
           <div class="col-md-12" id="gallery">
             <h4 class="text-green margtop25 text-justify">Image Gallery<small class="right traveller-validate validated"></small></h4>
-            <?php if(isset($view[0]->image)) { ?>
+            <?php if(isset($details->HotelDetails->ImageUrls)) { ?>
             <div class="slideshow-container">
               <div class="col-md-12 details-slider">
                 <div id="c-carousel">
@@ -1455,27 +1492,23 @@ function defaultcheck() {
                     <div id="caroufredsel_wrapper2">
                       <div id="carousel">
                         <?php 
-                          for ($q=1; $q <= 5; $q++) { 
-                            $image = 'Image'.$q;
-                           ?>
-                          
-                          <img src="<?php echo images_url(); ?>uploads/gallery/<?php echo $view[0]->id; ?>/<?php echo $view[0]->$image; ?>" alt=""/>
+                          foreach($details->HotelDetails->ImageUrls->ImageUrl as $value) { ?>          
+                          <img src="<?php echo $value ?>" alt=""/>
                         <?php } ?>          
                       </div>
                     </div>
                     <div id="pager-wrapper">
                       <div id="pager">
-                        <?php for ($q=1; $q <= 5; $q++) { 
-                            $image = 'Image'.$q;
-                         ?>
-                          <img src="<?php echo images_url(); ?>uploads/gallery/<?php echo $view[0]->id; ?>/<?php echo $view[0]->$image; ?>" width="120" height="68" alt=""/>
+                        <?php 
+                          foreach($details->HotelDetails->ImageUrls->ImageUrl as $value) { ?> 
+                          <img src="<?php echo $value ?>" width="120" height="68" alt=""/>
                        <?php } ?>              
                       </div>
                     </div>
                   </div>
                   <div class="clearfix"></div>
-                  <button id="prev_btn2" class="prev2"><img src="<?php echo static_url(); ?>skin/images/spacer.png" alt=""/></button>
-                  <button id="next_btn2" class="next2"><img src="<?php echo static_url(); ?>skin/images/spacer.png" alt=""/></button>   
+                  <button id="prev_btn2" class="prev2"><img src="skin/images/spacer.png" alt=""/></button>
+                  <button id="next_btn2" class="next2"><img src="skin/images/spacer.png" alt=""/></button>   
                     
                   </div>
                 </div> <!-- /c-carousel -->
@@ -1488,9 +1521,10 @@ function defaultcheck() {
           <div class="clearfix"></div>
           <div class="col-md-12" id="map">
             <h4 class="text-green margtop25 text-justify">Map<small class="right traveller-validate validated"></small></h4>
-            <?php if(isset($view[0]->lattitude)) { ?>
-            <input type="hidden" id="lat_val" value="<?php echo isset($view[0]->lattitude)?$view[0]->lattitude:''?>">
-            <input type="hidden" id="long_val" value="<?php echo isset($view[0]->longitude)?$view[0]->longitude:''?>">
+            <?php if(isset($details->HotelDetails->Map)) { 
+              $mapdet = explode('|',$details->HotelDetails->Map); ?>
+            <input type="hidden" id="lat_val" value="<?php echo $mapdet[0] ?>">
+            <input type="hidden" id="long_val" value="<?php echo $mapdet[1] ?>">
             <div id="map-canvas"></div>
             <?php } else { ?>
                <p>No details found.</p>
@@ -1499,12 +1533,12 @@ function defaultcheck() {
           <div class="clearfix"></div>
            <div class="col-md-12" id="other">
             <h4 class="text-green margtop25 text-justify">Basic Aminities<small class="right traveller-validate validated"></small></h4>
-            <?php if(isset($hotel_facilities[0])) { ?>
+            <?php if(isset($details->HotelDetails->HotelFacilities->HotelFacility)) { ?>
             <ul class="checklist" style="margin:15px">                 
-              <?php if (count($hotel_facilities[0])!=0) {
-                      foreach ($hotel_facilities as $key1 => $value3) {
+              <?php if (count($details->HotelDetails->HotelFacilities->HotelFacility)!=0) {
+                      foreach ($details->HotelDetails->HotelFacilities->HotelFacility as $key1 => $value3) { 
                       ?>
-                      <li><?php echo $value3[0]->Hotel_Facility; ?></li>
+                      <li><?php echo $value3; ?></li>
                     <?php } } ?>
             </ul>
              <?php } else { ?>
@@ -1586,7 +1620,7 @@ function defaultcheck() {
     $("#payment_form").submit();       
   });
   </script>
-<script src="skin/assets/js/initialize-google-map.js"></script>
+<script type='text/javascript' src="skin/assets/js/initialize-google-map.js"></script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>
 
 <script src="skin/assets/js/functions.js"></script>
