@@ -298,7 +298,6 @@ function bookingreviewmethod($token) {
     }
 </style>
 </head>
-<script type="text/javascript" src="skin/js/payment.js"></script>
 <style type="text/css">
 	.stay-pay-tag {
 	    background: red;
@@ -485,8 +484,7 @@ function bookingreviewmethod($token) {
 					}, 4000);
 				</script>
     	    <?php } ?> -->
-			<form method="post" name="payment_form" id="payment_form">
-				<input type="hidden" name="nationality" value="<?php echo $_REQUEST['nationality'] ?>">
+			<form method="post" name="payment_form" id="payment_form" action="./hotelbook.php">
 				<?php foreach ($_REQUEST['RequestType'] as $key => $value) { ?>
 					<input type="hidden" name="RequestType[]" value="<?php echo $value ?>">
 				<?php }	?>
@@ -542,23 +540,12 @@ function bookingreviewmethod($token) {
 							</div>
 						</div>
 					</div>
-						<?php for ($x=0; $x < count($_REQUEST['reqadults']); $x++) { ?>
-					<div class="col-md-6 textleft">
-						<input type="text" class="hide" id="first_name" name="first_name[]" value="<?php echo $_REQUEST['Room'.($x+1).'AdultFirstName'][0] ?>">
-
-						</div>
-						<div class="col-md-6 textleft">
-							<input type="text" class="hide" name="last_name[]" id="last_name" value="<?php echo $_REQUEST['Room'.($x+1).'AdultLastName'][0] ?>">
-						</div>
-						<?php } ?>
-						<div class="col-md-6 textleft">
-							</span><input type="text" class="hide" name="email" id="email" value="<?php echo $_REQUEST['email'] ?>">
-						</div>
-						<div class="col-md-6 textleft">
-							<input type="text" class="hide" name="contact_num" id="contact_num" value="<?php echo $_REQUEST['contact_num'] ?>">
-						</div>
-                         <?php for ($x=0; $x < count($_REQUEST['reqadults']); $x++) { 
-			                for ($i=0; $i < $_REQUEST['reqadults'][$x] ; $i++) {  ?>
+						
+						
+                         <?php for ($x=0; $x < count($_REQUEST['reqadults']); $x++) { ?>
+                            <input type="hidden" name="Room<?php echo $x+1 ?>adults" value="<?php echo $_REQUEST['reqadults'][$x] ?>">
+                            <input type="hidden" name="Room<?php echo $x+1 ?>child" value="<?php echo $_REQUEST['reqChild'][$x] ?>">
+			                <?php for ($i=0; $i < $_REQUEST['reqadults'][$x] ; $i++) {  ?>
 		                  	<input class="form-control input-sm Room-1Adulttitle hide" name="Room<?php echo $x+1 ?>Adulttitle[]" value="<?php echo isset($_REQUEST['Room'.($x+1).'Adulttitle'][$i]) ? $_REQUEST['Room'.($x+1).'Adulttitle'][$i] : '' ?>">   
 	                        <input type="text" class="hide form-control validated name-validate input-sm" name="Room<?php echo $x+1 ?>AdultFirstName[]" value="<?php echo isset($_REQUEST['Room'.($x+1).'AdultFirstName'][$i]) ? $_REQUEST['Room'.($x+1).'AdultFirstName'][$i] : '' ?>">
 		                    <input type="text" class="form-control hide validated name-validate  input-sm" name="Room<?php echo $x+1 ?>AdultLastName[]" value="<?php echo isset($_REQUEST['Room'.($x+1).'AdultLastName'][$i]) ? $_REQUEST['Room'.($x+1).'AdultLastName'][$i] : '' ?>">
@@ -570,7 +557,6 @@ function bookingreviewmethod($token) {
 							<input type="text" class="form-control validated name-validate hide  input-sm" name="Room<?php echo ($x+1)  ?>ChildLastName[]" value="<?php echo isset($_REQUEST['Room'.($x+1).'ChildLastName'][$j]) ? $_REQUEST['Room'.($x+1).'ChildLastName'][$j] : '' ?>">
 		                <?php } ?>
 		                <?php } ?>
-                     <input type="hidden" name="boardChildTotal" value="<?php echo $ctBchildamount ?>">
 
                     <div class="clearfix"></div>
                    <?php /* <div class="col-md-12">
@@ -889,11 +875,34 @@ function bookingreviewmethod($token) {
 
 </body>
 <script>
-  $('#Continue_book_api').click(function () {  
-  alert("hi");    
-    $("#payment_form").attr("action","./bookingreview.php");
-    $("#payment_form").submit();       
-  });
+  $("#Confirm_book").click(function() {
+      var type = $("input[name='paymenttype']:checked").val();
+      if ($("#cancel_agree").is(':checked')) {
+        if(typeof type=="undefined") {
+            $(".pay_error").text("( Please select a payment option )*");
+            $(".pay_error").css('color','red');
+            $("#pay_options").focus();
+        } else {
+            $("#Confirm_book").attr('disabled');
+            $("#payment_form").attr("action","./hotelbook.php");
+            $("#payment_form").submit();
+        }
+      } else {
+        tooltip_fun("#cancel_agree");
+      }
+    });
+  function tooltip_fun(id) {
+      $(id).attr({"title":"required !","data-toggle":"tooltip"});
+      $(id).tooltip();
+      $(id).focus().setTimeout(alertFunc(), 3000);
+  }
+  function alertFunc() {
+      
+  }
+  // $('#Confirm_book').click(function () {    
+  //   $("#payment_form").attr("action","./hotelbook.php");
+  //   $("#payment_form").submit();       
+  // });
   </script>
 <script src="skin/assets/js/initialize-google-map.js"></script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>

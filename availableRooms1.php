@@ -1647,9 +1647,115 @@ function defaultcheck() {
           }
       }
   })
-  $('#Continue_book_api').click(function () {     
-    $("#payment_form").attr("action","./bookingreview.php");
-    $("#payment_form").submit();       
+
+    $("#travellerSubmit").click(function() {
+      var err = 0;
+      var validate = $('.validate');
+      $.each(validate,function() {
+          if ($(this).val()=="" || $(this).val()==" ") {
+              $(this).removeClass('validated');
+              err += 1;
+              $("#email").focus();
+              document.body.scrollTop = 0;
+              document.documentElement.scrollTop = 0;
+          } else {
+              $(this).addClass('validated');
+          }
+       })
+
+      var namevalidate = $('.name-validate');
+
+      $.each(namevalidate,function() {
+          if ($(this).val()=="" || $(this).val()==" ") {
+              $(this).removeClass('validated');
+              err += 1;
+              $("#email").focus();
+              document.body.scrollTop = 0;
+              document.documentElement.scrollTop = 0;
+          } else {
+              if($(this).val().match(letters)) {
+                  if ($(this).val().length < 2) {
+                      err += 1;
+                      $(".traveller-validate").text('Minimum two letters should be used in First name and Last name!');
+                  } else {
+                      $(this).addClass('validated');
+                  }
+              } else {
+                  err += 1;
+                  $(".traveller-validate").text('Please check alphabets only accepted in First name and Last name!');
+                  $("#email").focus();
+                  document.body.scrollTop = 0;
+                  document.documentElement.scrollTop = 0;
+              }
+          }
+       })
+       
+       if (err==0) {
+        $(".close").trigger("click");
+       }
+
+  })
+
+  $('#Continue_book_api').click(function () { 
+
+    var err = 0;
+        var validate = $('.validate');
+        $.each(validate,function() {
+            if ($(this).val()=="" || $(this).val()==" ") {
+                $(this).removeClass('validated');
+                err += 1;
+                $("#email").focus();
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            } else {
+                $(this).addClass('validated');
+            }
+         })
+
+        var namevalidate = $('.name-validate');
+
+        $.each(namevalidate,function() {
+            if ($(this).val()=="" || $(this).val()==" ") {
+                $(this).removeClass('validated');
+                err += 1;
+                $("#email").focus();
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            } else {
+                if($(this).val().match(letters)) {
+                    if ($(this).val().length < 2) {
+                        err += 1;
+                        $(".traveller-validate").text('Minimum two letters should be used in First name and Last name!');
+                    } else {
+                        $(this).addClass('validated');
+                    }
+                } else {
+                    err += 1;
+                    $(".traveller-validate").text('Please check alphabets only accepted in First name and Last name!');
+                    $("#email").focus();
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                }
+            }
+         })
+
+        cnt = 0;
+        $.each($('.r-type--list'),function(){
+            cnt += $(this).find('input[type="radio"]:checked').length;
+        })
+        if ($('.r-type--list').length==cnt) {
+            $('.room-type-validate').addClass('validated');
+        } else {
+            $('.room-type-validate').removeClass('validated');
+            err += 1;
+        }
+        if (err!=0) {
+          $("#travellerModalButton").trigger("click");
+        }
+        if (err==0) {
+            $("#payment_form").attr("action","./bookingreview.php");
+            $("#payment_form").submit();
+        }                  
   });
   </script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>
