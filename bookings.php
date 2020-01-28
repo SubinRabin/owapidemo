@@ -1,72 +1,3 @@
-<?php
-if (isset($_REQUEST['hotel_id']) && isset($_REQUEST['token']) ) {
-   $dd=  authMethod();
-   $dd = json_decode($dd);
-   if (isset($dd->token)) {
-       $res = hotelbookmethod($dd->token);
-       $res = json_decode($res);
-   }
-}
-function authMethod() {
-    $curl = curl_init();
-    $url = 'https://sandbox-authapi.otelseasy.com/v1';
-    $auth = array(
-        'Agent_Code' => 'ABCDEF',
-        'Username' => 'sanbox-user',
-        'password' => 'pa$$word',
-    );
-    $data = json_encode($auth);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($curl, CURLOPT_URL, $url);
-
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-    ));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    $result = curl_exec($curl);
-    curl_close($curl);
-    return $result;
-}
-
-function hotelbookmethod($token) {
-    $curl = curl_init();
-    $url = 'https://sandbox-hotelbookapi.otelseasy.com/v1';
-    $roomindex = array();
-    $auth = array(
-        'token' => $_REQUEST['token'],
-        'hotelcode' => $_REQUEST['hotel_id'],
-        'RoomIndex' => $_REQUEST['RoomIndex'],
-    );
-    $room = array();
-    for($i=1;$i<=$_REQUEST['no_of_rooms'];$i++) {
-		for($j=0;$j<$_REQUEST['Room'.$i.'adults'];$j++) {
-                $auth['Room'.$i.'AdultTitle'][$j] = $_REQUEST['Room'.$i.'Adulttitle'][$j];
-                $auth['Room'.$i.'AdultFirstname'][$j] = $_REQUEST['Room'.$i.'AdultFirstName'][$j];
-                $auth['Room'.$i.'AdultLastname'][$j] = $_REQUEST['Room'.$i.'AdultLastName'][$j];
-				$auth['Room'.$i.'AdultAge'][$j] = $_REQUEST['Room'.$i.'AdultAge'][$j]!="" ? $_REQUEST['Room'.$i.'AdultAge'][$j] : 22;
-		}
-        for($j=0;$j<$_REQUEST['Room'.$i.'child'];$j++) {
-                $auth['Room'.$i.'ChildTitle'][$j] = $_REQUEST['Room'.$i.'ChildTitle'][$j];
-                $auth['Room'.$i.'ChildFirstname'][$j] = $_REQUEST['Room'.$i.'ChildFirstName'][$j];
-                $auth['Room'.$i.'ChildLastname'][$j] = $_REQUEST['Room'.$i.'ChildLastName'][$j];
-        }
-    }
-
-    $data = json_encode($auth);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-      'authorization: Bearer  '.$token.'',
-    ));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    $result = curl_exec($curl);
-    curl_close($curl);
-    return $result;
-}
-?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -116,7 +47,8 @@ function hotelbookmethod($token) {
             .swal2-popup .swal2-styled:focus {
                 box-shadow: none !important;
             }
-        </style>
+
+            </style>
         <style type="text/css">
   .msgbox.read {
       background: #f2f2f2;
@@ -431,6 +363,23 @@ function hotelbookmethod($token) {
       float: none;
     }
   }
+  .input-group.md-form.form-sm.form-2 input {
+      border: 1px solid #bdbdbd;
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
+  }
+  .input-group.md-form.form-sm.form-2 input.purple-border {
+      border: 1px solid #9e9e9e;
+  }
+  .input-group.md-form.form-sm.form-2 input[type=text]:focus:not([readonly]).purple-border {
+      border: 1px solid #ba68c8;
+      box-shadow: none;
+  }
+  .form-2 .input-group-addon {
+      border: 1px solid #ba68c8;
+      background-color: green;
+  }
+
 </style>
 <body id="top" class ="thebg">
     <div class="header" style="background: white">
@@ -443,18 +392,62 @@ function hotelbookmethod($token) {
     <div class="container" >
         <div class="container mt25 offset-0" style="padding-left:15px ">
             <div class="col-md-12 pagecontainer2 offset-0" style="padding-bottom: 35px ! important; margin-left: 9px">      
-                <div class="col-md-12 mt10" style="padding: 40px">
-                    <?php if (isset($res->status) && $res->status=="true") {?>
-                        <h4 class="opensans dark bold">Booking Successfull. <br>
-                            Booking Confirmation number is <?php echo $res->ConfirmationNo ?></h4>
-                    <?php } else { ?>
-                         <h4 class="opensans dark bold">Booking Failed. <br><br> Error Details:<br> </h4>
-                            </h4>
-                    <?php } ?>
-                    <div class="form-group col-md-12"><br><br><br>
-                        <a href="index.php"><button class="bluebtn pull-right" type="button">Back to search</button></a>
-                        <a href="bookings.php"><button class="bluebtn pull-right" type="button" style="margin-right: 5px">View Bookings</button></a>
+                <div class="col-md-12 mt10" style="padding: 20px">
+                     <div class="card mb-4">
+                <div class="card-body">
+                    <!-- Grid row -->
+                    <div class="row">
+                        <!-- Grid column -->
+                        <form id="searchform">
+                        <div class="col-md-8 col-md-offset-2">
+                            <h2 class="pt-3 pb-4 text-center font-bold font-up deep-purple-text">Bookings</h2>
+                            <div class="input-group md-form form-sm form-2 pl-0">
+                                <input class="form-control my-0 py-1 pl-3 purple-border" type="text" placeholder="confirmation number" id="search" name="confirmno" aria-label="Search">
+                                <span class="input-group-addon waves-effect lighten-2" id="basic-addon1"><a style="color: white"><i class="fa fa-search white-text" aria-hidden="true"></i></a></span>
+                            </div>
+                        </div>
+                      </form>
+                        <!-- Grid column -->
                     </div>
+                    <!-- Grid row -->
+                    <!--Table-->
+                    <table class="table table-striped" align="center" style="width: 65%">
+                        <!--Table head-->
+                        <thead>
+                            <tr>
+                                <th style="width: 25%">#</th>
+                                <th>Confirmation No</th>
+                            </tr>
+                        </thead>
+                        <!--Table head-->
+                        <!--Table body-->
+                        <tbody>
+                           <tr>
+                                <td scope="row">1</th>
+                                <td>HA0328</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">2</th>
+                                <td>HA0297</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">3</th>
+                                <td>HA0278</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">4</th>
+                                <td>HA0275</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">5</th>
+                                <td>HAB0270</td>
+                            </tr>    
+                        </tbody>
+                        <!--Table body-->
+                    </table>
+                    <!--Table-->
+                </div>
+            </div>
                 </div>
                 <div class="clear-fix"></div>
             </div>
@@ -481,7 +474,7 @@ function hotelbookmethod($token) {
         color: #ffffff;
         border: 1px solid #ffffff;
         border-radius:20px;
-      }
+    }
 
   </style>
  <div class="footerbgblack hidden-xs" style="background: #186900;padding: 20px 0">
@@ -512,6 +505,12 @@ function hotelbookmethod($token) {
 
 
 </body>
+<script>
+  $("#basic-addon1").click(function() {
+    $("#searchform").attr("action","./bookingview.php");
+    $("#searchform").submit();
+  });  
+</script>
 <script src="skin/assets/js/initialize-google-map.js"></script>
 <script type='text/javascript' src='skin/assets/js/jquery.customSelect.js'></script>
 

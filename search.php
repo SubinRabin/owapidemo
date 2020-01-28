@@ -326,7 +326,7 @@ footer{background-color: #186900!important;}
        
       </div>
       <div class="adi-right">
-      <div class="second-menu"><ul id="menu-befor-login-menu" class="menu"><li id="menu-item-9357" class="fa fa-user menu-item menu-item-type-post_type menu-item-object-page menu-item-9357"><a href="booking.php">My Bookings</a></li>
+      <div class="second-menu"><ul id="menu-befor-login-menu" class="menu"><li id="menu-item-9357" class="fa fa-user menu-item menu-item-type-post_type menu-item-object-page menu-item-9357"><a href="bookings.php">My Bookings</a></li>
 </ul></div>   
       </div>
     </div>

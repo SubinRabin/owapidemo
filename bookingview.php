@@ -1,9 +1,9 @@
 <?php
-if (isset($_REQUEST['hotel_id']) && isset($_REQUEST['token']) ) {
+if (isset($_REQUEST['confirmno'])) {
    $dd=  authMethod();
    $dd = json_decode($dd);
    if (isset($dd->token)) {
-       $res = hotelbookmethod($dd->token);
+       $res = bookingviewmethod($dd->token);
        $res = json_decode($res);
    }
 }
@@ -29,30 +29,13 @@ function authMethod() {
     return $result;
 }
 
-function hotelbookmethod($token) {
+function bookingviewmethod($token) {
     $curl = curl_init();
-    $url = 'https://sandbox-hotelbookapi.otelseasy.com/v1';
+    $url = 'https://sandbox-bookingdetailsapi.otelseasy.com/v1';
     $roomindex = array();
     $auth = array(
-        'token' => $_REQUEST['token'],
-        'hotelcode' => $_REQUEST['hotel_id'],
-        'RoomIndex' => $_REQUEST['RoomIndex'],
+        'ConfirmationNo' => $_REQUEST['confirmno'],
     );
-    $room = array();
-    for($i=1;$i<=$_REQUEST['no_of_rooms'];$i++) {
-		for($j=0;$j<$_REQUEST['Room'.$i.'adults'];$j++) {
-                $auth['Room'.$i.'AdultTitle'][$j] = $_REQUEST['Room'.$i.'Adulttitle'][$j];
-                $auth['Room'.$i.'AdultFirstname'][$j] = $_REQUEST['Room'.$i.'AdultFirstName'][$j];
-                $auth['Room'.$i.'AdultLastname'][$j] = $_REQUEST['Room'.$i.'AdultLastName'][$j];
-				$auth['Room'.$i.'AdultAge'][$j] = $_REQUEST['Room'.$i.'AdultAge'][$j]!="" ? $_REQUEST['Room'.$i.'AdultAge'][$j] : 22;
-		}
-        for($j=0;$j<$_REQUEST['Room'.$i.'child'];$j++) {
-                $auth['Room'.$i.'ChildTitle'][$j] = $_REQUEST['Room'.$i.'ChildTitle'][$j];
-                $auth['Room'.$i.'ChildFirstname'][$j] = $_REQUEST['Room'.$i.'ChildFirstName'][$j];
-                $auth['Room'.$i.'ChildLastname'][$j] = $_REQUEST['Room'.$i.'ChildLastName'][$j];
-        }
-    }
-
     $data = json_encode($auth);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -442,19 +425,203 @@ function hotelbookmethod($token) {
     <!-- CONTENT -->
     <div class="container" >
         <div class="container mt25 offset-0" style="padding-left:15px ">
-            <div class="col-md-12 pagecontainer2 offset-0" style="padding-bottom: 35px ! important; margin-left: 9px">      
+            <div class="col-md-12 pagecontainer2 offset-0" style="padding-bottom: 35px ! important; margin-left: 9px">     
                 <div class="col-md-12 mt10" style="padding: 40px">
-                    <?php if (isset($res->status) && $res->status=="true") {?>
-                        <h4 class="opensans dark bold">Booking Successfull. <br>
-                            Booking Confirmation number is <?php echo $res->ConfirmationNo ?></h4>
-                    <?php } else { ?>
-                         <h4 class="opensans dark bold">Booking Failed. <br><br> Error Details:<br> </h4>
-                            </h4>
-                    <?php } ?>
-                    <div class="form-group col-md-12"><br><br><br>
-                        <a href="index.php"><button class="bluebtn pull-right" type="button">Back to search</button></a>
-                        <a href="bookings.php"><button class="bluebtn pull-right" type="button" style="margin-right: 5px">View Bookings</button></a>
+                  <?php if (isset($res->status) && $res->status=="true" && isset($res->Result)) { ?>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row"> 
+                          <div class="col-md-12">
+                            <h4 class="dark bold">Hotel Details</h4>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-8">
+                              <div class="col-md-6">
+                                <p><span class="opensans size17 bold"><?php echo $res->Result->HotelName ?></span></p>
+                                
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <h4>Address</h4>
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="col-md-6">
+                                      <?php echo $res->Result->Address ?>
+                                      </br>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <p><img src="skin/images/bigrating-<?php echo $res->Result->Rating ?>.png" alt=""></p>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <h4>City</h4>
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="col-md-6">
+                                      <?php echo  $res->Result->City ?>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="clearfix"></div>
+                          </br>
+                          
+                          <div class="clearfix"></div>
+                          </br>
+                        
+                        </div><!-- mark -->
+
+                      </div>
+                      <div class="line2"></div>
+                      <div class="col-md-12 sleft_bor">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h4 class="dark bold">Booking Details</h4>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-6">
+                              <span>Booking Id : <?php echo  $res->Result->BookingId?></span><br>
+                              <span>Booking date : <?php echo date('d/m/Y',strtotime($res->Result->BookingDate)) ?></span>
+                            </div>
+                          </div>
+                        </div>
+                        </br>
+                        <div class="line2"></div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h4>Day Details</h4> 
+                            <p>Total Days : <?php echo $res->Result->No_of_days ?></p>
+                            <p>No of rooms : <?php echo $res->Result->No_of_rooms ?></p>
+                            <span>Check In Date : </span><span class="bold"><?php $check_in=date_create($res->Result->CheckIn);
+                             echo date_format($check_in,'d-M-Y') ?></span>&nbsp
+                            <span class="left_bor">&nbsp  Check Out Date : </span><span class="bold"><?php $check_out=date_create($res->Result->CheckIn);
+                            echo date_format($check_out,'d-M-Y') ?></span>
+                          </div>
+                          </br>
+                         
+                          <div class="col-md-12">
+                            <div class="col-mds-12">
+                              <h4>Traveller Details</h4> 
+                                <table class="table table-striped table-dark">
+                                  <thead>
+                                    <tr>
+                                      <td>Rooms</td>
+                                      <td>Name</td>
+                                      <td>Age</td>
+                                    </tr>
+                                  </thead>
+                                  <tbody> 
+                                    <?php 
+                                    for ($w=1; $w <=$res->Result->No_of_rooms; $w++) { 
+                                      $room = 'Room'.$w;
+                                      foreach($res->Result->TravellerDetails->$room->Guest as $value) { ?>
+                                        <tr>
+                                          <td>Room <?php echo $w ?></td>
+                                          <td><?php echo $value->Title." ".$value->Name; ?></td>
+                                          <td><?php echo $value->Age ?></td>                
+                                        </tr>
+                                      <?php } 
+                                    } ?>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                         
+                          <div class="line2"></div>
+                          <div class="col-md-12">
+                            <h4 class="dark bold">Booking Amount Breakup</h4>
+                            <?php              
+                            $total = array();             
+                            for ($i=1; $i <= $res->Result->No_of_rooms; $i++) { 
+                              $room = 'Room'.$i;
+                              $total[$i] = 0;
+                             ?>
+                            <div class="row payment-table-wrap">
+                                    <div class="col-md-12">
+                                      <h4 class="room-name">Room <?php echo $i; ?></h4>
+                                      <table class="table-bordered" >
+                                        <thead>
+                                          <tr>
+                                            <th style="width: 85px;">Date</th>
+                                            <th style="width: calc(100% - 265px);">Room Type</th>
+                                            <th style="width: 60px; text-align: center">Board</th>
+                                            <th style="width: 120px; text-align: right">Rate</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <?php 
+                                          foreach($res->Result->RoomRate->$room as $value) { ?>
+                                          <tr>
+                                            <td><?php echo $value->Date ?></td>
+                                            <td><?php echo $value->RoomName ?></td>
+                                            <td style="text-align: center"><?php echo $value->Board; ?></td>
+                                            <td style="text-align: right">
+                                              <p class="new-price">                                          
+                                                <?php  echo $value->TotalFare." AED"; 
+                                                $total[$i]+= $value->TotalFare; ?></p>
+                                            </td>
+                                          </tr>  
+                                          <?php } ?>                                       
+                                        </tbody>
+                                        <tfoot>
+                                          <tr>                                        
+                                            <td colspan="3" style="text-align: right"><strong class="text-blue">Total</strong></td>
+                                            <td style="text-align: right; font-weight: 700; color: #0074b9">
+                                             
+                                              <?php echo  $total[$i]." AED";?></td>
+                                          </tr>
+                                        </tfoot>
+                                      </table>
+                                    <div>
+                                  </div>
+                                  <br>
+                                  <?php } ?>
+                          </div>
+                          <div class="col-md-12">
+                              <div class="col-md-6">
+                                <p>Tax</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p><?php  $tax=isset($res->Result->Tax)?$res->Result->Tax:0;
+                                echo $tax; ?></p>
+                              </div>
+                              <?php 
+                            $finaltotal = (array_sum($total))+$tax;
+                            
+                            ?>
+                              <div class="col-md-6 bold">
+                                <p>GRAND TOTAL</p>
+                              </div>
+                              <div class="col-md-6 bold">
+                                <p><?php 
+                                echo $finaltotal." AED"?></p>
+                              </div>
+                            <!-- </div> -->
+                          </div>
+                        </div>
+                        </br>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h4 class="bold">Important Remarks</h4>
+                            <div style ="whitespace:pre-wrap"><?php  echo isset($res->Result->ImportantPolicy) ? $res->Result->ImportantPolicy : '' ?></div>
+                          </div>
+                        </div>
+                       <!--  <div class="row">
+                          <div class="col-md-12">
+                            <h4>progress : <?php if ($view[0]->booking_flag==0) { ?>
+                              <span class="red">Rejected</span>
+                            <?php } else if($res->Result->booking_flag==1) { ?><span class="green">Success</span><?php } else if($view[0]->booking_flag==2) { ?><span class="orange">Pending</span> <?php } else if($view[0]->booking_flag==8) {
+                              ?><span class="orange">On Request</span>
+                            <?php } ?></h4>
+                          </div>
+                        </div> -->
+                      </div>
                     </div>
+                  <?php } ?>
                 </div>
                 <div class="clear-fix"></div>
             </div>
